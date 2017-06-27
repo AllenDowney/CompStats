@@ -90,7 +90,7 @@ If you don't want to install Anaconda,
 
 You can run my notebook in a virtual machine on Binder. To launch the VM, press this button:
 
- [![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/allendowney/thinkcomplexity2)
+ [![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/allendowney/compstats)
 
 You should see a home page with a list of the files in the repository.
 
