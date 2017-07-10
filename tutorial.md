@@ -41,7 +41,7 @@ Otherwise you can download the repository in [this zip file](https://github.com/
 
 To start Jupyter, run:
 
-    cd CompStats/code
+    cd CompStats
     jupyter notebook
 
 Jupyter should launch your default browser or open a tab in an existing browser window.
