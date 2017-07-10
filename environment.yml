@@ -1,0 +1,9 @@
+name: tutorial-comp-stats
+dependencies:
+  - python
+  - numpy
+  - matplotlib
+  - pandas
+  - scipy
+  - jupyter
+  - ipython
