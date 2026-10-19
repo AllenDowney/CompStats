@@ -39,7 +39,8 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] Status badge in the README
 
 **3. Colab**
-- [ ] "Click here to run this notebook on Colab" cell after each title (solutions link to the version with blanks); Colab links in the README
+- [x] "Click here to run this notebook on Colab" cell after each title, all 10 notebooks; solutions also link to the version with blanks (2026-10-19)
+- [ ] Colab links in the README's notebook table (with the README, step 5)
 - [ ] Allen runs one notebook on Colab end to end
 
 **4. Text**
