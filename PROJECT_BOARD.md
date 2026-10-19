@@ -34,9 +34,9 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [ ] Replace Binder and Anaconda instructions (`tutorial.md`) with Colab first, then pip or mamba (with the README, step 5)
 
 **2. Tests and CI**
-- [ ] `pytest --nbmake` on the notebooks that should run top to bottom
-- [ ] `.github/workflows/tests.yml`; watch the first run
-- [ ] Status badge in the README
+- [x] `pytest --nbmake *.ipynb`: all 10 notebooks, student versions too; the two cells with exercise blanks (`sampling`: `StdResampler`; `hypothesis`: `DiffStdPermute`) are tagged `raises-exception` (2026-10-19). About 2 minutes
+- [x] `.github/workflows/tests.yml` (push to master, PR, monthly, manual; Python 3.12; pip; 20-minute timeout; checkout@v5, setup-python@v6). First run passed: https://github.com/AllenDowney/CompStats/actions/runs/39333749191
+- [x] Status badge in the README
 
 **3. Colab**
 - [ ] "Click here to run this notebook on Colab" cell after each title (solutions link to the version with blanks); Colab links in the README
