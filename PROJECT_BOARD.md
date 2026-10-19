@@ -44,8 +44,17 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [ ] Allen runs one notebook on Colab end to end
 
 **4. Text**
-- [ ] Typos, wrong docstrings, broken links (codespell, and read the markdown)
-- [ ] Everything else under "Content issues"
+- [x] Typos, wrong docstrings, broken links (codespell, and read all the markdown; 2026-10-19), in both versions where there are two:
+  - effect_size: "takes and rv object"
+  - hypothesis: "Exercize", "signficance"
+  - sampling: "sample standard mean" → "sample mean", "also considering resampling" → "considered"
+  - pmf_intro: `pregorder` → `pregordr` (the variable), "samples sizes", stray quote in the Gutenberg URL
+  - resampling: "Getting get back", "computaton", "these weight", "by a one of … and 244, one for each variable", `prglength` → `prglngth`, "about 0.78 weeks" → 0.078 (13 hours), "13 about hours", "pregnancies lengths in one groups", "test statistics" → "test statistic", list numbered 1-4, 4, 5 → 1-6, "these is", "suprising", "is would not", `TestStat` → `test_stat` (the method)
+  - text_analysis: Zipf counts updated for *Pride and Prejudice* (4230, 4117, 3689)
+  - tumbleweed: "suprising", docstring "return:" → "returns:"
+  - Links: http → https (Creative Commons, ColorBrewer, CDC BRFSS, Wikipedia, Gutenberg), opensource.org MIT license URL updated to its new address
+  - The numbers quoted in the text (p-values, differences) still match fresh runs
+- [x] Everything else under "Content issues"
 
 **5. README in the standard shape**
 - [ ] Title, badge, author, abstract, level and prerequisites, length (ask Allen), outline, notebook table, slides, recordings with tags, running instructions, next steps (*Think Stats*, hub), license
@@ -110,4 +119,9 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 5. `text_analysis` has no explanation of the new example text; the markdown just says "an example using a book". The Gutenberg header and license text are included in the counts (as with `pg2591.txt` in `pmf_intro`).
 6. `hypothesis` (all versions) still imports `from __future__`, which does nothing in Python 3; also `pmf_intro`, `effect_size`, `sampling`.
 7. `resampling` says it reads "the most recent data from BRFSS (2016)"; the latest BRFSS is much newer.
-8. `pmf_intro` links to the old blogspot post (`allendowney.blogspot.com`).
+8. `pmf_intro` and `tumbleweed` link to the old blogspot posts (`allendowney.blogspot.com`, still working); `pmf_intro` says the first-babies post is "still the most popular, with more than 100,000 page views".
+9. `tumbleweed`: the 2019 AP Statistics exam PDF is gone (the URL redirects to the College Board's past exam questions page); no obvious replacement.
+10. `pmf_intro`: introduces the "cumulative mass function (CMF)", then calls the curves CDFs.
+11. `pmf_intro` and `text_analysis`: "reads lines from a file or URL", but `iterate_words` reads only files.
+12. `sampling` ends: "permutation tests, which we'll see in the next section", which is in another notebook (`hypothesis`).
+13. `resampling` has two headings "Different test statistics" and "Different test statistic"; `hypothesis` has "Part four" vs "Part One/Two/Three", and mixes `===` and `##` heading styles.
