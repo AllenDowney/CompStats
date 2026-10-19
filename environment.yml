@@ -1,15 +1,15 @@
 name: CompStats
-
+channels:
+  - conda-forge
 dependencies:
-  - python=3.7
+  - python=3.12
   - jupyter
+  - ipywidgets
   - numpy
-  - matplotlib
-  - seaborn
   - pandas
   - scipy
-
-
-
-
-
+  - matplotlib
+  - seaborn
+  # for testing
+  - pytest
+  - nbmake

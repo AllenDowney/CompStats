@@ -19,14 +19,19 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] Tags pushed (2026-10-19)
 - [ ] README: each recording lists its tag
 - [x] Inventory (below)
-- [ ] Environment: `mamba env create -f environment.yml` (name `CompStats`)
+- [x] Environment: `mamba env create -f environment.yml` (name `CompStats`; Python 3.12.15, NumPy 2.5, pandas 3.0, SciPy 1.18, Matplotlib 3.11, seaborn 0.13, ipywidgets 8.1)
 
 **1. Runs in a current environment**
-- [ ] `environment.yml` (Python 3.12, conda-forge, pytest, nbmake), `requirements.txt`, `requirements-dev.txt`
-- [ ] First code cell installs what Colab lacks and downloads data and helper files if missing
-- [ ] Fix breakage and deprecation warnings (run with warnings as errors); `pmf_intro` is Python 2.7
-- [ ] Data URLs (the NSFG files are in the repo)
-- [ ] Replace Binder and Anaconda instructions (`tutorial.md`) with Colab first, then pip or mamba
+- [x] `environment.yml` (Python 3.12, conda-forge, Jupyter, ipywidgets, the scientific stack, pytest, nbmake), `requirements.txt` (unpinned; Colab has everything), `requirements-dev.txt` (2026-10-19)
+- [x] First code cell downloads the data files from the repo if missing (`hypothesis`, `resampling`, `pmf_intro`, `text_analysis`); nothing to install. `effect_size`, `sampling`, `tumbleweed` need no cell. Tested in an empty directory with `pmf_intro`; the others need the new files pushed first
+- [x] Breakage and warnings, found with scratch runs with warnings as errors:
+  - NumPy 2 removed `np.int`/`np.float`, used in the copy of `thinkstats2.py` (`hypothesis`, `resampling`, `pmf_intro`)
+  - pandas 3: `nsfg.CleanFemPreg` used chained `df.col.replace(..., inplace=True)`, which now does nothing, so the 97/98/99 codes stayed in `birthwgt_oz` and the mean birth weights were off (7.22/7.36 lb instead of the book's 7.20/7.33)
+  - Fix (Allen: inline the code): `read_stata_dct` and `read_fem_preg` in a cell in each notebook that reads the NSFG; `first.py`, `nsfg.py`, `nsfg2.py`, `hypothesis.py`, `thinkstats2.py`, `thinkplot.py`, `check_env.py` deleted
+  - `pmf_intro` ported to Python 3 (`izip` → `zip`, `iteritems` → `items`, kernel metadata)
+  - All notebooks now run with no errors or warnings, except the exercise blanks in `sampling.ipynb` (`StdResampler`) and `hypothesis.ipynb` (`DiffStdPermute`), which are expected (step 2: `raises-exception`)
+- [x] Data: `resampling` read `LLCP2016.HDF`, which was never in the repo. Now `brfss2016_subset.csv.gz` (BRFSS 2016, 4 columns, 486,303 rows, 5.7 MB) is in the repo, made from the CDC file (https://www.cdc.gov/brfss/annual_data/2016/files/LLCP2016XPT.zip) by `read_brfss()` in the notebook. `text_analysis` uses `pg42671.txt` (*Pride and Prejudice*, Gutenberg, R. W. Chapman edition; #1342 has "Copyright 1894 by George Allen" captions that top the trigram counts), and its `d['I', 'said']` example is now `d['Mr.', 'Darcy']`. `pmf_intro` loses the commented-out Elvis line
+- [ ] Replace Binder and Anaconda instructions (`tutorial.md`) with Colab first, then pip or mamba (with the README, step 5)
 
 **2. Tests and CI**
 - [ ] `pytest --nbmake` on the notebooks that should run top to bottom
@@ -76,8 +81,9 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 
 - `look_and_say.ipynb` (2019, not related to the workshop).
 - `the_fault_in_our_stars.txt` and `lyrics-elvis-presley.txt` (copyrighted texts; see Content issues 1).
-- Candidates, to confirm after step 1: `hypothesis.py` and `nsfg2.py` (scripts from *Think Stats*; no notebook imports them), `check_env.py` (old install check), `tutorial.md` (2017 install instructions, Binder), `_config.yml` (until the `jb/` site replaces it).
-- `.gitignore` is the GitHub Python template; add `.ipynb_checkpoints/`.
+- Deleted in step 1 (2026-10-19): `look_and_say.ipynb`, the two copyrighted texts, `cumulative_snowfall.png` (unused), the helper modules and scripts (above).
+- Still to go: `tutorial.md` (2017 install instructions, Binder; its abstract is useful for the README), `_config.yml` (when the `jb/` site replaces it).
+- `.gitignore`: `.ipynb_checkpoints/` added.
 
 **Local state not in git (discarded 2026-10-19, backups in the session scratchpad):**
 
@@ -90,12 +96,17 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 - The workshop is `effect_size`, `sampling`, `hypothesis` (student and solution), and `resampling`.
 - Keep `pmf_intro`, `text_analysis`, `tumbleweed` as extras; delete `look_and_say`.
 - Remove the copyrighted texts from `master` (no history rewrite).
+- BRFSS: a 4-column subset in the repo. Helpers: inline the code in the notebooks. `text_analysis`: *Pride and Prejudice*. `pmf_intro`: the Grimm text instead of the lyrics.
 
 ### Content issues
 
 (For Allen to decide.)
 
-1. `text_analysis` and `pmf_intro` read the copyrighted texts that are being removed; they need public-domain replacements (e.g. Project Gutenberg) or a different example.
+1. Resolved 2026-10-19: the copyrighted texts replaced (Decisions).
 2. `resampling` has no student version; does it need one?
 3. Licenses: `LICENSE` is MIT; the 2016 notebooks say CC BY 4.0, `text_analysis` says MIT.
 4. The README describes the workshop only in one line; the abstract in `tutorial.md` links to the old blogspot blog and Think Stats URL.
+5. `text_analysis` has no explanation of the new example text; the markdown just says "an example using a book". The Gutenberg header and license text are included in the counts (as with `pg2591.txt` in `pmf_intro`).
+6. `hypothesis` (all versions) still imports `from __future__`, which does nothing in Python 3; also `pmf_intro`, `effect_size`, `sampling`.
+7. `resampling` says it reads "the most recent data from BRFSS (2016)"; the latest BRFSS is much newer.
+8. `pmf_intro` links to the old blogspot post (`allendowney.blogspot.com`).

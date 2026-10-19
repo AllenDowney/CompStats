@@ -8,10 +8,12 @@ Allen Downey's tutorial "Computational Statistics": statistical inference with r
 
 - `effect_size.ipynb` / `effect_size_soln.ipynb`
 - `sampling.ipynb` / `sampling_soln.ipynb`
-- `hypothesis.ipynb` / `hypothesis_soln.ipynb` (imports `first.py`, which uses `nsfg.py`, `thinkstats2.py`, `thinkplot.py` and the NSFG files `2002FemPreg.*`)
-- `resampling.ipynb` (2018; no student version)
+- `hypothesis.ipynb` / `hypothesis_soln.ipynb` (NSFG files `2002FemPreg.*`)
+- `resampling.ipynb` (2018; no student version; NSFG files and `brfss2016_subset.csv.gz`)
 
-Extras, not part of the workshop: `pmf_intro.ipynb`, `text_analysis.ipynb`, `tumbleweed.ipynb`.
+No helper modules: the code that reads the NSFG (`read_stata_dct`, `read_fem_preg`) is in a cell in each notebook that uses it, so keep the copies the same. Notebooks that need data files download them from the repo in their first code cell.
+
+Extras, not part of the workshop: `pmf_intro.ipynb` (NSFG, `pg2591.txt`), `text_analysis.ipynb` (`pg42671.txt`, *Pride and Prejudice*), `tumbleweed.ipynb`.
 
 ## Tags
 
@@ -20,4 +22,4 @@ Extras, not part of the workshop: `pmf_intro.ipynb`, `text_analysis.ipynb`, `tum
 
 ## Testing
 
-Environment: `mamba env create -f environment.yml` (name `CompStats`). To be set up in step 2 of the refresh: `pytest --nbmake` on the notebooks that run top to bottom.
+Environment: `mamba env create -f environment.yml` (name `CompStats`). To be set up in step 2 of the refresh: `pytest --nbmake` on the notebooks that run top to bottom. The student versions of `sampling` and `hypothesis` have exercise blanks that raise `NameError`.
