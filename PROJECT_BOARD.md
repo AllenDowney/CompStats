@@ -8,7 +8,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 
 ## Task 1: Refresh
 
-**Status:** DONE (2026-10-20), except Allen's Search Console submission
+**Status:** DONE (2026-10-20)
 
 **Context:** CompStats is a "current" workshop (GreenTeaPress Task 24). The guide is the "Refresh checklist" in `~/GreenTeaPress/plans/workshops.md`; BayesMadeSimple is the worked example. 223 stars; last content change 2021-03-08. The most recent recording is [SciPy 2017](https://www.youtube.com/watch?v=He9MCbs1wgE).
 
@@ -64,7 +64,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] SEO checklist in a test build (scratch copy): sitemap lists only the 8 pages; each page has one description, one `og:description`, `rel="canonical"`; landing H1 "Computational Statistics: A Tutorial in Python" differs from the site title; page-view counter in `extra_footer`; social image is the *Think Stats* 3e cover; no cell errors
 - [x] Allen approved the eight descriptions (2026-10-19)
 - [x] Published (2026-10-19): `./build.sh publish` to `gh-pages`; Pages switched from `master` / (Jekyll README) to `gh-pages`; root `_config.yml` deleted; `Sitemap:` line in `~/AllenDowney.github.io/robots.txt`
-- [ ] Allen submits `https://allendowney.github.io/CompStats/sitemap.xml` in Search Console; tick in GreenTeaPress Task 22
+- [x] Allen submitted the sitemap in Search Console (2026-10-20); tick in GreenTeaPress Task 22
 - [x] Hub entry still accurate (no change). Topic `jupyter-book` added on GitHub and to the CompStats line in GreenTeaPress `scripts/repo_about.sh` (left uncommitted there, next to other sessions' edits); description and website unchanged. Live site checked 2026-10-19: landing page, pages and sitemap return 200; the first Pages build after the switch had to be requested (`gh api -X POST repos/AllenDowney/CompStats/pages/builds`)
 
 **7. Close**
@@ -128,3 +128,4 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 12. Resolved 2026-10-20 (Allen): "in the next section" → "in the next notebook".
 13. Resolved 2026-10-20 (Allen): headings fixed in the notebooks (title the only H1, ATX, Parts `##`, "Part Four"); resampling's second "Different test statistic" → "Testing the standard deviation".
 14. Done 2026-10-20 (Allen, now in the refresh checklist): copyright and license moved from the title cell to a markdown cell at the end of each notebook.
+15. Open (Allen, 2026-10-20, new rule for all tutorials and workshops): code under MIT, text under Creative Commons. This reverses item 3 ("MIT everywhere") for the text; which CC license (the headers used to say CC BY 4.0), then update the end-of-notebook cells and the README.
