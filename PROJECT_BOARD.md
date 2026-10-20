@@ -17,7 +17,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] `PROJECT_BOARD.md` and `CLAUDE.md` (2026-10-19)
 - [x] Tags created locally (2026-10-19): `pycon-2015` at `3881760` (2015-04-03, "Updating for PyCon 2015"), `scipy-2015` at `78e946e` (2015-06-23), `pycon-2016` at `f26bc0a` (2016-05-24), `scipy-2017` at `9fdd22e` (2017-07-10; the notebooks are the same from `8371d79`, 2017-07-08, through `9fdd22e`, so the exact tutorial day doesn't matter; the 2017-07-14 "Fixing problem with interactions" came after), `pre-refresh-2026` at `64ee4bd`
 - [x] Tags pushed (2026-10-19)
-- [ ] README: each recording lists its tag
+- [x] README: each recording lists its tag
 - [x] Inventory (below)
 - [x] Environment: `mamba env create -f environment.yml` (name `CompStats`; Python 3.12.15, NumPy 2.5, pandas 3.0, SciPy 1.18, Matplotlib 3.11, seaborn 0.13, ipywidgets 8.1)
 
@@ -31,7 +31,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
   - `pmf_intro` ported to Python 3 (`izip` → `zip`, `iteritems` → `items`, kernel metadata)
   - All notebooks now run with no errors or warnings, except the exercise blanks in `sampling.ipynb` (`StdResampler`) and `hypothesis.ipynb` (`DiffStdPermute`), which are expected (step 2: `raises-exception`)
 - [x] Data: `resampling` read `LLCP2016.HDF`, which was never in the repo. Now `brfss2016_subset.csv.gz` (BRFSS 2016, 4 columns, 486,303 rows, 5.7 MB) is in the repo, made from the CDC file (https://www.cdc.gov/brfss/annual_data/2016/files/LLCP2016XPT.zip) by `read_brfss()` in the notebook. `text_analysis` uses `pg42671.txt` (*Pride and Prejudice*, Gutenberg, R. W. Chapman edition; #1342 has "Copyright 1894 by George Allen" captions that top the trigram counts), and its `d['I', 'said']` example is now `d['Mr.', 'Darcy']`. `pmf_intro` loses the commented-out Elvis line
-- [ ] Replace Binder and Anaconda instructions (`tutorial.md`) with Colab first, then pip or mamba (with the README, step 5)
+- [x] Binder and Anaconda instructions replaced: `tutorial.md` deleted; its abstract is in the README, with Colab first, then pip or mamba (2026-10-19)
 
 **2. Tests and CI**
 - [x] `pytest --nbmake *.ipynb`: all 10 notebooks, student versions too; the two cells with exercise blanks (`sampling`: `StdResampler`; `hypothesis`: `DiffStdPermute`) are tagged `raises-exception` (2026-10-19). About 2 minutes
@@ -40,7 +40,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 
 **3. Colab**
 - [x] "Click here to run this notebook on Colab" cell after each title, all 10 notebooks; solutions also link to the version with blanks (2026-10-19)
-- [ ] Colab links in the README's notebook table (with the README, step 5)
+- [x] Colab links in the README's notebook table (step 5)
 - [ ] Allen runs one notebook on Colab end to end
 
 **4. Text**
@@ -57,7 +57,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] Everything else under "Content issues"
 
 **5. README in the standard shape**
-- [ ] Title, badge, author, abstract, level and prerequisites, length (ask Allen), outline, notebook table, slides, recordings with tags, running instructions, next steps (*Think Stats*, hub), license
+- [x] README rewritten (2026-10-19): abstract (from `tutorial.md`, Olin class dropped), level (beginner, Allen), length (3 hours, Allen), outline with `resampling` as part 4 (Allen), Colab table, slides (Google Slides, Allen), extras, data sources, recordings with tags, running instructions, next steps (*Think Stats*, hub), license (MIT, the `LICENSE` file; see Content issues 3)
 
 **6. Site and visibility**
 - [ ] `jb/` (Jupyter Book 1, BayesMadeSimple as the template); the current site is the README via Jekyll (Pages from `master` /, `_config.yml`)
@@ -92,7 +92,7 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 - `look_and_say.ipynb` (2019, not related to the workshop).
 - `the_fault_in_our_stars.txt` and `lyrics-elvis-presley.txt` (copyrighted texts; see Content issues 1).
 - Deleted in step 1 (2026-10-19): `look_and_say.ipynb`, the two copyrighted texts, `cumulative_snowfall.png` (unused), the helper modules and scripts (above).
-- Still to go: `tutorial.md` (2017 install instructions, Binder; its abstract is useful for the README), `_config.yml` (when the `jb/` site replaces it).
+- `tutorial.md` deleted in step 5. Still to go: `_config.yml` (when the `jb/` site replaces it).
 - `.gitignore`: `.ipynb_checkpoints/` added.
 
 **Local state not in git (discarded 2026-10-19, backups in the session scratchpad):**
@@ -115,7 +115,7 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 1. Resolved 2026-10-19: the copyrighted texts replaced (Decisions).
 2. `resampling` has no student version; does it need one?
 3. Licenses: `LICENSE` is MIT; the 2016 notebooks say CC BY 4.0, `text_analysis` says MIT.
-4. The README describes the workshop only in one line; the abstract in `tutorial.md` links to the old blogspot blog and Think Stats URL.
+4. Resolved 2026-10-19: README rewritten.
 5. `text_analysis` has no explanation of the new example text; the markdown just says "an example using a book". The Gutenberg header and license text are included in the counts (as with `pg2591.txt` in `pmf_intro`).
 6. `hypothesis` (all versions) still imports `from __future__`, which does nothing in Python 3; also `pmf_intro`, `effect_size`, `sampling`.
 7. `resampling` says it reads "the most recent data from BRFSS (2016)"; the latest BRFSS is much newer.
