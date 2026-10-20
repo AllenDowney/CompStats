@@ -118,12 +118,13 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 2. Resolved 2026-10-19 (Allen): `resampling` stays a demo, with no student version.
 3. Resolved 2026-10-19 (Allen): MIT everywhere; notebook headers changed from CC BY 4.0, copyright years now e.g. "2016–2026".
 4. Resolved 2026-10-19: README rewritten.
-5. `text_analysis` has no explanation of the new example text; the markdown just says "an example using a book". The Gutenberg header and license text are included in the counts (as with `pg2591.txt` in `pmf_intro`).
+5. Resolved 2026-10-20 (Allen): `text_analysis` names *Pride and Prejudice*; `iterate_words` (also in `pmf_intro`) skips the Gutenberg header and license; Zipf counts in the text updated (Grimm 6350, 5182, 2637; Austen 4061, 4045, 3578).
 6. Resolved 2026-10-19 (Allen): `from __future__` imports removed.
-7. `resampling` says it reads "the most recent data from BRFSS (2016)"; the latest BRFSS is much newer.
-8. `pmf_intro` and `tumbleweed` link to the old blogspot posts (`allendowney.blogspot.com`, still working); `pmf_intro` says the first-babies post is "still the most popular, with more than 100,000 page views".
-9. `tumbleweed`: the 2019 AP Statistics exam PDF is gone (the URL redirects to the College Board's past exam questions page); no obvious replacement.
-10. `pmf_intro`: introduces the "cumulative mass function (CMF)", then calls the curves CDFs.
-11. `pmf_intro` and `text_analysis`: "reads lines from a file or URL", but `iterate_words` reads only files.
-12. `sampling` ends: "permutation tests, which we'll see in the next section", which is in another notebook (`hypothesis`).
-13. `resampling` has two headings "Different test statistics" and "Different test statistic"; `hypothesis` has "Part four" vs "Part One/Two/Three", and mixes `===` and `##` heading styles.
+7. Resolved 2026-10-20 (Allen): "the most recent data from BRFSS (2016)" → "data from the 2016 BRFSS".
+8. Resolved 2026-10-20 (Allen): blogspot links → https; "still the most popular, with more than 100,000 page views" cut.
+9. Resolved 2026-10-20 (Allen): `tumbleweed` cites free-response question 4 and links to the College Board's past exam questions page.
+10. Resolved 2026-10-20 (Allen): "cumulative mass function (CMF)" → "cumulative distribution function (CDF)".
+11. Resolved 2026-10-20 (Allen): "from a file or URL" → "from a file".
+12. Resolved 2026-10-20 (Allen): "in the next section" → "in the next notebook".
+13. Resolved 2026-10-20 (Allen): headings fixed in the notebooks (title the only H1, ATX, Parts `##`, "Part Four"); resampling's second "Different test statistic" → "Testing the standard deviation".
+14. Done 2026-10-20 (Allen, now in the refresh checklist): copyright and license moved from the title cell to a markdown cell at the end of each notebook.
