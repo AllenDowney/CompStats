@@ -65,7 +65,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] Allen approved the eight descriptions (2026-10-19)
 - [x] Published (2026-10-19): `./build.sh publish` to `gh-pages`; Pages switched from `master` / (Jekyll README) to `gh-pages`; root `_config.yml` deleted; `Sitemap:` line in `~/AllenDowney.github.io/robots.txt`
 - [ ] Allen submits `https://allendowney.github.io/CompStats/sitemap.xml` in Search Console; tick in GreenTeaPress Task 22
-- [ ] Hub entry, repo description and topics
+- [x] Hub entry still accurate (no change). Topic `jupyter-book` added on GitHub and to the CompStats line in GreenTeaPress `scripts/repo_about.sh` (left uncommitted there, next to other sessions' edits); description and website unchanged. Live site checked 2026-10-19: landing page, pages and sitemap return 200; the first Pages build after the switch had to be requested (`gh api -X POST repos/AllenDowney/CompStats/pages/builds`)
 
 **7. Close**
 - [ ] Tag `2026-refresh`; note in GreenTeaPress Task 24
