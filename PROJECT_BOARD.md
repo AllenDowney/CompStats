@@ -113,11 +113,11 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 (For Allen to decide.)
 
 1. Resolved 2026-10-19: the copyrighted texts replaced (Decisions).
-2. `resampling` has no student version; does it need one?
-3. Licenses: `LICENSE` is MIT; the 2016 notebooks say CC BY 4.0, `text_analysis` says MIT.
+2. Resolved 2026-10-19 (Allen): `resampling` stays a demo, with no student version.
+3. Resolved 2026-10-19 (Allen): MIT everywhere; notebook headers changed from CC BY 4.0, copyright years now e.g. "2016–2026".
 4. Resolved 2026-10-19: README rewritten.
 5. `text_analysis` has no explanation of the new example text; the markdown just says "an example using a book". The Gutenberg header and license text are included in the counts (as with `pg2591.txt` in `pmf_intro`).
-6. `hypothesis` (all versions) still imports `from __future__`, which does nothing in Python 3; also `pmf_intro`, `effect_size`, `sampling`.
+6. Resolved 2026-10-19 (Allen): `from __future__` imports removed.
 7. `resampling` says it reads "the most recent data from BRFSS (2016)"; the latest BRFSS is much newer.
 8. `pmf_intro` and `tumbleweed` link to the old blogspot posts (`allendowney.blogspot.com`, still working); `pmf_intro` says the first-babies post is "still the most popular, with more than 100,000 page views".
 9. `tumbleweed`: the 2019 AP Statistics exam PDF is gone (the URL redirects to the College Board's past exam questions page); no obvious replacement.
