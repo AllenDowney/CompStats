@@ -62,8 +62,9 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 **6. Site and visibility**
 - [x] `jb/` (Jupyter Book 1, 2026-10-19): `build.sh [publish]` runs `prep_notebooks.py` (copies the solution notebooks in without `_soln`, the other notebooks as they are, and the data files; makes the title the only H1, setext → ATX, "Part …" headings → H2, "STOP HERE" → bold; adds the page descriptions) and `jb build` (executes the notebooks, about 2 minutes). TOC: "The workshop" (4 pages) and "Extras" (3). Build tools in `environment.yml` (`mamba env update` timed out after 20 minutes; `mamba install` of the four packages worked in seconds). The current site is still the README via Jekyll (Pages from `master` /, `_config.yml`)
 - [x] SEO checklist in a test build (scratch copy): sitemap lists only the 8 pages; each page has one description, one `og:description`, `rel="canonical"`; landing H1 "Computational Statistics: A Tutorial in Python" differs from the site title; page-view counter in `extra_footer`; social image is the *Think Stats* 3e cover; no cell errors
-- [ ] Allen reviews the eight descriptions (`jb/index.md` front matter, `jb/prep_notebooks.py`)
-- [ ] Publish, switch Pages to `gh-pages`, delete the root `_config.yml`; `Sitemap:` line in `~/AllenDowney.github.io/robots.txt`; Search Console; GreenTeaPress Task 22
+- [x] Allen approved the eight descriptions (2026-10-19)
+- [x] Published (2026-10-19): `./build.sh publish` to `gh-pages`; Pages switched from `master` / (Jekyll README) to `gh-pages`; root `_config.yml` deleted; `Sitemap:` line in `~/AllenDowney.github.io/robots.txt`
+- [ ] Allen submits `https://allendowney.github.io/CompStats/sitemap.xml` in Search Console; tick in GreenTeaPress Task 22
 - [ ] Hub entry, repo description and topics
 
 **7. Close**

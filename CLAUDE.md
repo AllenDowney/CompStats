@@ -1,6 +1,6 @@
 # CompStats
 
-Allen Downey's tutorial "Computational Statistics": statistical inference with resampling and simulation in Python (effect sizes, sampling distributions, hypothesis testing). Given at PyCon US 2015 and 2016 and SciPy 2015 and 2017. The README is also the GitHub Pages site (`allendowney.github.io/CompStats/`, Jekyll minimal theme via `_config.yml`).
+Allen Downey's tutorial "Computational Statistics": statistical inference with resampling and simulation in Python (effect sizes, sampling distributions, hypothesis testing). Given at PyCon US 2015 and 2016 and SciPy 2015 and 2017. The GitHub Pages site (`allendowney.github.io/CompStats/`) is the Jupyter Book in `jb/`, published to the `gh-pages` branch.
 
 **Guide for the 2026 refresh:** the "Refresh checklist" in `~/GreenTeaPress/plans/workshops.md` (BayesMadeSimple is the worked example). Progress goes on `PROJECT_BOARD.md` here (Task 1) and in GreenTeaPress Task 24.
 
