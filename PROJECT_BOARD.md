@@ -60,8 +60,9 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] README rewritten (2026-10-19): abstract (from `tutorial.md`, Olin class dropped), level (beginner, Allen), length (3 hours, Allen), outline with `resampling` as part 4 (Allen), Colab table, slides (Google Slides, Allen), extras, data sources, recordings with tags, running instructions, next steps (*Think Stats*, hub), license (MIT, the `LICENSE` file; see Content issues 3)
 
 **6. Site and visibility**
-- [ ] `jb/` (Jupyter Book 1, BayesMadeSimple as the template); the current site is the README via Jekyll (Pages from `master` /, `_config.yml`)
-- [ ] SEO checklist in a test build; Allen reviews the descriptions
+- [x] `jb/` (Jupyter Book 1, 2026-10-19): `build.sh [publish]` runs `prep_notebooks.py` (copies the solution notebooks in without `_soln`, the other notebooks as they are, and the data files; makes the title the only H1, setext → ATX, "Part …" headings → H2, "STOP HERE" → bold; adds the page descriptions) and `jb build` (executes the notebooks, about 2 minutes). TOC: "The workshop" (4 pages) and "Extras" (3). Build tools in `environment.yml` (`mamba env update` timed out after 20 minutes; `mamba install` of the four packages worked in seconds). The current site is still the README via Jekyll (Pages from `master` /, `_config.yml`)
+- [x] SEO checklist in a test build (scratch copy): sitemap lists only the 8 pages; each page has one description, one `og:description`, `rel="canonical"`; landing H1 "Computational Statistics: A Tutorial in Python" differs from the site title; page-view counter in `extra_footer`; social image is the *Think Stats* 3e cover; no cell errors
+- [ ] Allen reviews the eight descriptions (`jb/index.md` front matter, `jb/prep_notebooks.py`)
 - [ ] Publish, switch Pages to `gh-pages`, delete the root `_config.yml`; `Sitemap:` line in `~/AllenDowney.github.io/robots.txt`; Search Console; GreenTeaPress Task 22
 - [ ] Hub entry, repo description and topics
 

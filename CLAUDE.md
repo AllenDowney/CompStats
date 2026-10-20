@@ -15,6 +15,10 @@ No helper modules: the code that reads the NSFG (`read_stata_dct`, `read_fem_pre
 
 Extras, not part of the workshop: `pmf_intro.ipynb` (NSFG, `pg2591.txt`), `text_analysis.ipynb` (`pg42671.txt`, *Pride and Prejudice*), `tumbleweed.ipynb`.
 
+## Site
+
+`jb/` builds the Jupyter Book site (`cd jb; ./build.sh [publish]`); `prep_notebooks.py` copies the notebooks and data in and holds the page descriptions. Template: BayesMadeSimple.
+
 ## Tags
 
 - `pycon-2015`, `scipy-2015`, `pycon-2016`, `scipy-2017`: the code in each recording (the last commit before the event).

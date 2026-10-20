@@ -55,3 +55,10 @@ target/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Jupyter Book: the build, and the notebooks and data that jb/prep_notebooks.py copies in
+jb/_build/
+jb/*.ipynb
+jb/2002FemPreg.*
+jb/*.csv.gz
+jb/pg*.txt

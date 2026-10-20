@@ -1,0 +1,14 @@
+format: jb-book
+root: index
+parts:
+- caption: The workshop
+  chapters:
+  - file: effect_size
+  - file: sampling
+  - file: hypothesis
+  - file: resampling
+- caption: Extras
+  chapters:
+  - file: pmf_intro
+  - file: text_analysis
+  - file: tumbleweed
