@@ -116,7 +116,7 @@ All notebooks use `from __future__ import …`; kernel metadata says Python 3.6.
 
 1. Resolved 2026-10-19: the copyrighted texts replaced (Decisions).
 2. Resolved 2026-10-19 (Allen): `resampling` stays a demo, with no student version.
-3. Resolved 2026-10-19 (Allen): MIT everywhere; notebook headers changed from CC BY 4.0, copyright years now e.g. "2016–2026".
+3. Resolved 2026-10-19 (Allen): MIT everywhere; notebook headers changed from CC BY 4.0, copyright years now e.g. "2016–2026". Revised 2026-10-20 (Allen, checklist rule): code MIT, text CC BY-NC-SA 4.0, in the last cell of each notebook, the README and the site landing page.
 4. Resolved 2026-10-19: README rewritten.
 5. Resolved 2026-10-20 (Allen): `text_analysis` names *Pride and Prejudice*; `iterate_words` (also in `pmf_intro`) skips the Gutenberg header and license; Zipf counts in the text updated (Grimm 6350, 5182, 2637; Austen 4061, 4045, 3578).
 6. Resolved 2026-10-19 (Allen): `from __future__` imports removed.

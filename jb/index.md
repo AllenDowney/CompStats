@@ -42,4 +42,4 @@ I presented this tutorial at PyCon US 2015 and 2016 and at SciPy 2015 and 2017. 
 
 To go further, read [*Think Stats*](https://allendowney.github.io/ThinkStats/), which is free online, or see [my other workshops](https://allendowney.github.io/#workshops).
 
-The code is on [GitHub](https://github.com/AllenDowney/CompStats), under the MIT License.
+The code is on [GitHub](https://github.com/AllenDowney/CompStats), under the MIT License; the text is under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).

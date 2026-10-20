@@ -91,4 +91,4 @@ To go further, read [*Think Stats*](https://allendowney.github.io/ThinkStats/), 
 
 ## License
 
-The code is available under the [MIT License](LICENSE).
+The code is available under the [MIT License](LICENSE). The text is available under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
