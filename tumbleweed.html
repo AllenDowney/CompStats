@@ -1,0 +1,1013 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Solve a 2019 AP Statistics exam problem by simulation in Python: a hypothesis test for a difference in proportions with the &quot;only one test&quot; framework." name="description" />
+<meta property="og:title" content="There is only one test" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://allendowney.github.io/CompStats/tumbleweed.html" />
+<meta property="og:site_name" content="Computational Statistics" />
+<meta property="og:description" content="Solve a 2019 AP Statistics exam problem by simulation in Python: a hypothesis test for a difference in proportions with the &quot;only one test&quot; framework." />
+<meta property="og:image" content="https://greenteapress.com/wp/wp-content/uploads/2025/04/think_stats_3e_cover_small.jpg" />
+<meta property="og:image:alt" content="Cover of Think Stats by Allen B. Downey, the book this tutorial is based on" />
+
+    <title>There is only one test &#8212; Computational Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tumbleweed';</script>
+    <link rel="canonical" href="https://allendowney.github.io/CompStats/tumbleweed.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Text analysis with Python" href="text_analysis.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Computational Statistics</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Computational Statistics: A Tutorial in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The workshop</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="effect_size.html">Effect Size</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Random Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hypothesis.html">Hypothesis Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">Teaching statistical inference with resampling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extras</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pmf_intro.html">Introduction to PMFs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_analysis.html">Text analysis with Python</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">There is only one test</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/AllenDowney/CompStats" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/tumbleweed.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>There is only one test</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tumbleweed-problem">The tumbleweed problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistics">Different test statistics</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="there-is-only-one-test">
+<h1>There is only one test<a class="headerlink" href="#there-is-only-one-test" title="Link to this heading">#</a></h1>
+<p>Copyright 2018–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
+<p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/tumbleweed.ipynb">Click here to run this notebook on Colab</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure Jupyter so figures appear in the notebook</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># Configure Jupyter to display the assigned value after an assignment</span>
+<span class="o">%</span><span class="k">config</span> InteractiveShell.ast_node_interactivity='last_expr_or_assign'
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-tumbleweed-problem">
+<h2>The tumbleweed problem<a class="headerlink" href="#the-tumbleweed-problem" title="Link to this heading">#</a></h2>
+<p>Here’s an example that uses the “<a class="reference external" href="http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html">There is only one test</a>” framework to solve a problem from the <a class="reference external" href="https://secure-media.collegeboard.org/apc/ap19-frq-statistics.pdf">2019 AP® Statistics Exam</a></p>
+<blockquote>
+<div><p>Tumbleweed, commonly found in the western United States, is the dried structure of certain plants that are
+blown by the wind. Kochia, a type of plant that turns into tumbleweed at the end of the summer, is a problem for
+farmers because it takes nutrients away from soil that would otherwise go to more beneficial plants. Scientists
+are concerned that kochia plants are becoming resistant to the most commonly used herbicide, glyphosate.</p>
+</div></blockquote>
+<blockquote>
+<div><p>In 2014, 19.7 percent of 61 randomly selected kochia plants were resistant to glyphosate. In 2017, 38.5 percent of 52 randomly selected kochia plants were resistant to glyphosate. Do the data provide convincing statistical
+evidence, at the level of <span class="math notranslate nohighlight">\(\alpha = 0.05\)</span>, that there has been an increase in the proportion of all kochia plants that are resistant to glyphosate?</p>
+</div></blockquote>
+<p>Because the problem reports the data in terms of percentages, we have to work backwards to get the actual number of plants in each group that were resistant:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.197</span> <span class="o">*</span> <span class="mi">61</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12.017000000000001
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.385</span> <span class="o">*</span> <span class="mi">52</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20.02
+</pre></div>
+</div>
+</div>
+</div>
+<p>It looks like there were 12 resistant plants in the first group and 20 in the second group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k1</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">k2</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32
+</pre></div>
+</div>
+</div>
+</div>
+<p>And here are the sample sizes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span> <span class="o">=</span> <span class="mi">61</span>
+<span class="n">n2</span> <span class="o">=</span> <span class="mi">52</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>113
+</pre></div>
+</div>
+</div>
+</div>
+<p>The first step toward hypothesis testing is to define a test statistic that measures the size of the effect.  In this case, the hypothetical effect is an increase in the fraction of resistant plants, that is, a difference in proportions.</p>
+<p>I’ll write a function that takes the data as a parameter and computes the difference in proportions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute the test statistic."""</span>
+    <span class="n">k1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">k1</span><span class="o">/</span><span class="n">n1</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">k2</span><span class="o">/</span><span class="n">n2</span>
+    <span class="k">return</span> <span class="n">p2</span> <span class="o">-</span> <span class="n">p1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>I pass the data to the function as a tuple of 4 numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">k1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">n2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(12, 61, 20, 52)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can compute the observed difference in proportions (and check it against the numbers in the problem).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actual</span> <span class="o">=</span> <span class="n">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1878940731399748
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.385</span> <span class="o">-</span> <span class="mf">0.197</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.188
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we need a null hypothesis.  The scientists think there might be an increase in the fraction of resistant plants, so the null hypothesis is that there is no increase.</p>
+<p>Under that assumption, the two groups have the same proportion of resistant plants, which we can estimate by pooling the data and computing the proportion among all of the observed plants.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.2831858407079646
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, the fundamental question in hypothesis testing is this: under the null hypothesis, what would be the chance of seeing an apparent effect as big as <code class="docutils literal notranslate"><span class="pre">actual</span></code>?</p>
+<p>To answer that question, we simulate the null hypothesis and generate “fake data”, then compute the test statistic of the fake data.</p>
+<p>I’ll use the following function, which simulates flipping <code class="docutils literal notranslate"><span class="pre">n</span></code> coins, each with probability <code class="docutils literal notranslate"><span class="pre">p</span></code> of landing heads, and returns the total number of heads.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">flip</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Flip n coins with probability p.</span>
+<span class="sd">    </span>
+<span class="sd">    n: number of coins</span>
+<span class="sd">    p: probability of heads</span>
+<span class="sd">    </span>
+<span class="sd">    returns: total number of heads</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As an example, I’ll simulate the two groups and compute the number of resistant plants in each group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flip</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(17)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flip</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(12)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can wrap that in a function that returns the results in the same format as the original data, a tuple of 4 numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Simulate the null hypothesis."""</span>
+    <span class="n">k1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="n">k2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">k2</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">k1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">n2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Returning the results in that format makes it possible to pass the “fake data” directly to <code class="docutils literal notranslate"><span class="pre">test_stat</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_stat</span><span class="p">(</span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(-0.11916771752837327)
+</pre></div>
+</div>
+</div>
+</div>
+<p>That’s the result of one simulated experiment.</p>
+<p>Now we run the experiment 1000 times and collect the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_stat_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">test_stat</span><span class="p">(</span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> 
+                           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.05580076, -0.13272383,  0.03751576, -0.0721942 , -0.06431274,
+       -0.00094578, -0.07503153,  0.13020177, -0.18474149, -0.0258512 ,
+        0.18789407,  0.10025221,  0.05611602, -0.02301387, -0.00157629,
+       -0.11065574, -0.08354351, -0.0037831 ,  0.16582598,  0.22919294,
+       -0.0258512 ,  0.00189155, -0.01796974,  0.07534678, -0.00662043,
+       -0.02017654,  0.12452711,  0.07030265, -0.05863808,  0.01544767,
+        0.1907314 ,  0.02332913,  0.05390921,  0.10813367,  0.08385876,
+       -0.02017654,  0.0425599 , -0.16551072,  0.01544767, -0.00945776,
+       -0.1276797 , -0.02301387,  0.01765448,  0.07534678, -0.09709962,
+        0.04539723,  0.00409836,  0.06462799, -0.0942623 , -0.05580076,
+        0.07818411,  0.0204918 , -0.04224464,  0.03688525, -0.12988651,
+        0.05107188, -0.25598991, -0.03436318, -0.04224464,  0.09741488,
+        0.05390921, -0.00662043, -0.08858764, -0.12137453, -0.02868852,
+       -0.05075662, -0.0037831 ,  0.01481715,  0.06746532,  0.08385876,
+        0.16361917, -0.1276797 , -0.0501261 ,  0.08385876,  0.08385876,
+       -0.00662043, -0.0258512 ,  0.13871375, -0.16267339,  0.05895334,
+       -0.0721942 ,  0.00977301,  0.09237074, -0.22320303,  0.00409836,
+        0.11443884,  0.05390921, -0.08070618,  0.05107188, -0.07566204,
+        0.10813367,  0.06746532, -0.08921816, -0.08575032,  0.05107188,
+        0.02332913, -0.13556116,  0.05895334, -0.16834805,  0.13303909,
+        0.0668348 , -0.09142497,  0.01765448,  0.21847415,  0.03121059,
+        0.09741488, -0.0258512 , -0.0942623 , -0.0721942 ,  0.17433796,
+        0.00977301, -0.03089533,  0.01261034,  0.04823455, -0.12421185,
+        0.08385876, -0.16551072, -0.09142497,  0.00409836, -0.05580076,
+        0.10025221,  0.04539723,  0.03972257,  0.05674653, -0.08070618,
+        0.13303909,  0.08953342,  0.10025221,  0.10529634,  0.06746532,
+       -0.16267339,  0.01544767,  0.11664565, -0.05580076, -0.04508197,
+       -0.12988651,  0.01261034, -0.11349306, -0.14344262,  0.00693569,
+       -0.11916772,  0.1223203 , -0.1185372 , -0.12484237,  0.06462799,
+       -0.00094578, -0.00662043, -0.00662043,  0.02616646,  0.00409836,
+        0.11380832, -0.00094578,  0.09741488,  0.08102144,  0.04035309,
+       -0.17118537,  0.1443884 , -0.05580076,  0.03467844,  0.01261034,
+       -0.06935687, -0.09142497,  0.03688525, -0.03373266,  0.02616646,
+       -0.06935687,  0.02900378,  0.15794451,  0.08669609,  0.17938209,
+        0.20996217, -0.00094578, -0.03656999, -0.14627995,  0.0889029 ,
+       -0.01513241,  0.03751576, -0.00662043,  0.13871375, -0.02805801,
+        0.06462799, -0.12200504, -0.08354351, -0.00945776, -0.03152585,
+       -0.0037831 ,  0.02332913, -0.04791929,  0.06746532, -0.10498108,
+        0.07818411, -0.02017654,  0.08102144, -0.10277427, -0.07503153,
+       -0.06715006,  0.09457755,  0.06746532, -0.04508197, -0.00662043,
+       -0.1276797 , -0.04224464, -0.03656999, -0.23392182, -0.04003783,
+       -0.10844893, -0.01450189,  0.14659521,  0.18221942, -0.00945776,
+       -0.06147541, -0.11916772, -0.02017654,  0.14155107, -0.06147541,
+       -0.05075662,  0.11380832,  0.10308953,  0.0204918 ,  0.09741488,
+        0.07250946,  0.06179067,  0.12515763, -0.04791929, -0.03152585,
+       -0.01229508, -0.14627995,  0.21784363, -0.01229508, -0.28310214,
+        0.16582598, -0.09489281, -0.00094578, -0.04224464, -0.04224464,
+        0.15290038, -0.27238335, -0.12421185,  0.04319042, -0.12704918,
+        0.09174023,  0.07818411, -0.03656999, -0.09709962,  0.00472888,
+        0.01481715, -0.00441362, -0.09205549, -0.16267339,  0.06462799,
+        0.07313997,  0.05390921, -0.0592686 ,  0.05327869,  0.0889029 ,
+        0.10308953,  0.09174023, -0.02301387,  0.07818411, -0.13556116,
+        0.11443884,  0.02679697,  0.00409836,  0.04823455, -0.09142497,
+        0.00409836, -0.10844893, -0.0037831 , -0.01733922,  0.00409836,
+        0.06179067,  0.10025221, -0.00094578, -0.03373266, -0.13272383,
+        0.06179067, -0.08070618, -0.02017654,  0.10813367, -0.02301387,
+        0.06746532,  0.04823455,  0.09174023, -0.18474149, -0.05296343,
+        0.0425599 , -0.1519546 , -0.09142497,  0.07818411,  0.14943253,
+        0.00126103, -0.07786885,  0.05107188,  0.12452711,  0.05895334,
+        0.12736444,  0.02900378,  0.07030265,  0.03404792, -0.0942623 ,
+        0.03184111, -0.08070618,  0.07313997,  0.08102144,  0.05674653,
+       -0.08070618, -0.00157629,  0.01765448, -0.05863808,  0.06179067,
+        0.13083228, -0.11349306,  0.01544767,  0.09174023, -0.10498108,
+        0.29476671, -0.03089533, -0.00094578,  0.17150063, -0.02805801,
+       -0.15762926, -0.11633039, -0.13839849, -0.11349306,  0.07818411,
+        0.05895334,  0.04823455,  0.14659521, -0.02017654, -0.05359395,
+       -0.10781841, -0.12200504, -0.03656999,  0.1223203 ,  0.00693569,
+       -0.04224464,  0.00409836, -0.12704918, -0.0721942 ,  0.02616646,
+       -0.01513241,  0.07534678, -0.0372005 , -0.08858764,  0.18789407,
+       -0.10214376, -0.05359395, -0.03089533,  0.07818411,  0.18284994,
+        0.03184111, -0.03152585, -0.1519546 , -0.02868852, -0.06998739,
+       -0.01513241,  0.07250946, -0.09709962,  0.06462799,  0.12452711,
+       -0.1406053 , -0.03152585,  0.16645649, -0.06431274, -0.01513241,
+       -0.08354351,  0.00126103,  0.05611602,  0.01261034, -0.09993695,
+       -0.09709962,  0.00409836,  0.0204918 ,  0.0889029 ,  0.03688525,
+        0.11380832, -0.11633039,  0.00409836, -0.06998739,  0.09741488,
+        0.00409836,  0.0204918 , -0.04508197,  0.07534678, -0.06715006,
+       -0.00662043, -0.15132409,  0.16645649, -0.06935687,  0.03184111,
+       -0.04224464, -0.06715006, -0.06147541,  0.04539723, -0.01733922,
+        0.08385876, -0.03089533, -0.01513241, -0.08070618,  0.10308953,
+       -0.07786885,  0.05327869, -0.04791929, -0.10781841,  0.06746532,
+        0.03404792,  0.00977301,  0.03688525, -0.11065574,  0.06746532,
+       -0.01513241,  0.00409836,  0.13587642,  0.03184111, -0.00945776,
+       -0.0942623 ,  0.03404792, -0.16551072,  0.07818411, -0.03436318,
+        0.10308953, -0.13272383, -0.04508197,  0.05327869, -0.00441362,
+       -0.03656999,  0.04823455,  0.09741488,  0.08669609, -0.09993695,
+       -0.01796974, -0.0721942 ,  0.09741488,  0.01261034,  0.01261034,
+        0.10245902, -0.0942623 ,  0.03184111, -0.0258512 , -0.09930643,
+        0.12736444,  0.03404792,  0.1223203 , -0.0258512 ,  0.09237074,
+       -0.02868852,  0.11380832, -0.05800757, -0.18190416,  0.13303909,
+        0.04823455,  0.01261034, -0.00662043,  0.02616646,  0.06746532,
+        0.07534678,  0.09741488,  0.03751576, -0.14123581, -0.10498108,
+       -0.08070618, -0.04508197, -0.00945776, -0.06715006,  0.13020177,
+       -0.03436318,  0.00126103,  0.06967213,  0.07818411,  0.04539723,
+       -0.01513241, -0.02868852, -0.0258512 , -0.00945776,  0.12452711,
+       -0.01733922, -0.07503153, -0.07786885, -0.00945776, -0.11065574,
+        0.03184111, -0.01733922,  0.02395965, -0.08070618, -0.12137453,
+       -0.04791929, -0.23392182, -0.08638083, -0.11633039, -0.03656999,
+        0.02900378,  0.02900378, -0.0258512 , -0.02868852,  0.08606557,
+        0.01544767,  0.09457755, -0.04791929, -0.11916772, -0.0372005 ,
+        0.07030265,  0.15226986, -0.06431274,  0.02616646, -0.14407314,
+       -0.01796974, -0.01796974, -0.01796974, -0.00094578, -0.07786885,
+       -0.08070618, -0.14123581, -0.04003783, -0.0942623 , -0.06147541,
+        0.08606557,  0.2370744 ,  0.02332913, -0.10781841, -0.03373266,
+        0.04539723,  0.0759773 , -0.06431274, -0.03152585, -0.03940731,
+       -0.00945776,  0.03467844,  0.01481715,  0.13020177, -0.0942623 ,
+       -0.03152585,  0.10025221, -0.04508197, -0.00945776,  0.08385876,
+        0.14155107, -0.04508197, -0.08638083, -0.09709962,  0.12736444,
+       -0.14123581,  0.01481715, -0.00945776,  0.00409836, -0.05075662,
+        0.00409836,  0.00126103, -0.02868852,  0.03467844, -0.01796974,
+        0.0425599 ,  0.10025221,  0.09237074,  0.08385876,  0.13083228,
+        0.00977301,  0.13587642, -0.30233291,  0.0425599 ,  0.04823455,
+        0.04823455,  0.15794451,  0.06179067, -0.06147541,  0.0204918 ,
+        0.08953342, -0.06998739, -0.15762926,  0.12515763,  0.11948298,
+        0.11948298,  0.05674653, -0.0258512 ,  0.19640605,  0.05390921,
+        0.16645649, -0.12704918, -0.05580076, -0.00094578, -0.00441362,
+       -0.00945776, -0.03436318,  0.05107188,  0.02616646,  0.07250946,
+       -0.07786885, -0.11349306, -0.00157629,  0.08385876, -0.03656999,
+        0.17150063,  0.09520807, -0.05359395, -0.09709962, -0.05863808,
+        0.10308953,  0.14659521, -0.07786885, -0.03940731,  0.07818411,
+        0.08102144, -0.06431274,  0.1443884 , -0.07786885, -0.02017654,
+        0.15226986,  0.09457755, -0.03152585, -0.09993695, -0.02080706,
+        0.0204918 , -0.04508197,  0.17150063,  0.08669609, -0.07786885,
+        0.02900378, -0.03940731,  0.06746532,  0.10813367, -0.01229508,
+        0.06462799,  0.01481715,  0.1223203 ,  0.01544767, -0.09993695,
+       -0.0942623 , -0.05075662, -0.01229508,  0.07818411, -0.0037831 ,
+        0.08102144,  0.05895334,  0.07534678,  0.09174023, -0.12421185,
+        0.08102144, -0.09142497, -0.11916772,  0.28972257,  0.01261034,
+        0.11948298, -0.00945776,  0.15006305,  0.08102144, -0.00441362,
+       -0.01229508, -0.07786885,  0.02900378,  0.00977301,  0.01828499,
+       -0.03656999,  0.16361917,  0.11380832, -0.01513241, -0.07503153,
+        0.07818411,  0.13303909, -0.01733922,  0.12515763,  0.19356873,
+        0.08669609, -0.02868852, -0.11349306, -0.04728878, -0.14123581,
+       -0.05075662,  0.110971  ,  0.00126103,  0.09457755, -0.05863808,
+        0.01261034, -0.09709962,  0.01828499, -0.06431274,  0.10592686,
+       -0.11349306, -0.05359395, -0.02868852, -0.08354351,  0.03184111,
+       -0.06431274,  0.01765448, -0.0721942 , -0.18190416, -0.01229508,
+       -0.17622951,  0.06462799, -0.00662043,  0.02332913, -0.04508197,
+        0.07534678,  0.0668348 ,  0.06746532, -0.01513241, -0.0942623 ,
+        0.05390921, -0.25315259,  0.06179067,  0.00977301, -0.05580076,
+        0.01765448, -0.06431274,  0.03688525, -0.12200504, -0.05863808,
+        0.02112232,  0.04823455, -0.0721942 , -0.02301387,  0.02616646,
+        0.03184111,  0.08102144, -0.00945776,  0.0425599 , -0.02301387,
+       -0.18190416, -0.05580076,  0.2127995 ,  0.09457755, -0.09993695,
+        0.09457755, -0.06715006,  0.0425599 , -0.10214376,  0.15794451,
+        0.06179067, -0.11916772,  0.01261034, -0.01513241, -0.08638083,
+       -0.03656999,  0.07534678, -0.02301387,  0.06462799,  0.05327869,
+       -0.03940731,  0.04539723, -0.01733922,  0.06462799,  0.07818411,
+       -0.01229508,  0.110971  , -0.0372005 , -0.08354351,  0.01544767,
+        0.00977301, -0.15762926, -0.06368222,  0.13871375,  0.08669609,
+       -0.11349306, -0.12484237,  0.00409836, -0.05075662, -0.00945776,
+       -0.06147541,  0.02332913, -0.04224464, -0.18190416,  0.08102144,
+        0.01544767,  0.06462799, -0.06935687, -0.03940731, -0.0942623 ,
+        0.03972257, -0.10277427, -0.05863808,  0.07818411,  0.00693569,
+       -0.25031526,  0.15290038,  0.0425599 , -0.06715006,  0.110971  ,
+       -0.02301387,  0.06746532,  0.05327869,  0.02332913, -0.06431274,
+        0.03404792,  0.06746532,  0.08102144, -0.07503153, -0.06998739,
+       -0.07503153, -0.02868852,  0.00472888,  0.04823455, -0.08921816,
+        0.00977301, -0.11349306, -0.04508197, -0.03436318,  0.02616646,
+       -0.02868852, -0.05075662, -0.10277427,  0.08102144,  0.07818411,
+        0.05611602,  0.17150063,  0.04539723,  0.05107188, -0.07503153,
+       -0.0037831 , -0.00945776,  0.05611602,  0.22131148,  0.17150063,
+        0.07881463,  0.02900378, -0.03152585, -0.06935687, -0.06998739,
+       -0.07786885, -0.03656999, -0.0258512 ,  0.02332913, -0.20113493,
+        0.06179067, -0.06715006,  0.01261034,  0.13020177,  0.06242119,
+        0.15510719, -0.12200504, -0.00094578,  0.11380832, -0.11916772,
+       -0.03373266,  0.14943253,  0.10025221,  0.1443884 ,  0.13587642,
+       -0.01796974,  0.0425599 ,  0.0204918 , -0.08638083,  0.04823455,
+        0.01828499,  0.00409836, -0.01450189, -0.08921816, -0.01796974,
+        0.00693569, -0.03940731,  0.09741488, -0.04224464,  0.04539723,
+       -0.02301387, -0.05359395, -0.03940731, -0.03089533, -0.02301387,
+        0.12452711, -0.02868852,  0.02900378,  0.08102144,  0.08669609,
+       -0.15983607,  0.08669609,  0.16582598,  0.04823455,  0.16298865,
+       -0.13209332, -0.06147541,  0.08669609,  0.02616646,  0.03184111,
+       -0.15983607,  0.06462799, -0.03436318,  0.08606557, -0.05643127,
+        0.07818411, -0.04791929,  0.03751576,  0.22635561,  0.05390921,
+        0.10308953,  0.10025221,  0.08102144, -0.03656999,  0.04823455,
+       -0.06715006, -0.07503153,  0.07534678,  0.09741488,  0.01261034,
+       -0.08638083, -0.03940731, -0.06431274, -0.29161412,  0.14659521,
+        0.04823455,  0.06179067,  0.02900378, -0.12421185, -0.05863808,
+        0.05327869,  0.11664565, -0.00662043, -0.03940731, -0.0942623 ,
+        0.11380832, -0.06147541,  0.14659521, -0.0258512 ,  0.11160151,
+        0.03121059,  0.00977301,  0.07250946,  0.0204918 , -0.01229508,
+        0.02332913,  0.03972257, -0.07503153, -0.09709962,  0.0075662 ,
+       -0.03152585,  0.0759773 , -0.07503153,  0.08102144,  0.04539723,
+       -0.02301387, -0.07786885, -0.02017654, -0.2424338 , -0.16834805,
+        0.13083228,  0.05107188,  0.14155107,  0.20996217, -0.05075662,
+       -0.15479193,  0.11664565, -0.04287516, -0.0258512 ,  0.03467844,
+        0.01544767, -0.03152585, -0.00094578,  0.05327869, -0.02080706,
+       -0.09142497, -0.02868852,  0.13303909, -0.12200504,  0.05390921,
+       -0.08354351,  0.04539723,  0.09237074, -0.03940731,  0.01544767,
+        0.01828499,  0.04539723, -0.00662043,  0.05327869, -0.13556116,
+       -0.06147541, -0.02017654, -0.06715006,  0.08102144,  0.07534678,
+       -0.03940731, -0.14344262, -0.07566204,  0.05327869,  0.05327869,
+       -0.0037831 , -0.04791929,  0.00126103,  0.09741488, -0.09205549,
+        0.09174023,  0.00693569, -0.13272383, -0.10277427, -0.09709962,
+        0.07881463,  0.15226986, -0.16551072,  0.02616646,  0.13808323,
+        0.08102144, -0.06431274, -0.07786885, -0.08858764, -0.0721942 ,
+        0.06967213, -0.01513241, -0.0037831 ,  0.00126103,  0.06179067,
+        0.05107188,  0.1686633 , -0.22320303,  0.02112232, -0.02017654])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is the “sampling distribution of the test statistic under the null hypothesis”.</p>
+<p>The mean of this distribution is close to zero, which is not surprising because it is based on the assumption that there is actually no difference between the groups.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0026305170239596513)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s what the distribution of test statistics looks like.</p>
+<p>The vertical gray line shows the observed effect size, <code class="docutils literal notranslate"><span class="pre">actual</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Difference in proportions'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Number of simulations'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Sampling distribution of the test statistic under H0'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c238892d8737ce6e7c639523f3baa682298a637def7bced617ba5d7911e077a0.png" src="_images/c238892d8737ce6e7c639523f3baa682298a637def7bced617ba5d7911e077a0.png" />
+</div>
+</div>
+<p>Now we can compute the probability that the test statistic, under the null hypothesis, exceeds the observed difference.</p>
+<p>This probability is the “p-value”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_stat_dist</span> <span class="o">&gt;=</span> <span class="n">actual</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.016)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The estimated p-value is less than the specified threshold, <span class="math notranslate nohighlight">\(\alpha = 0.05\)</span>, so the observed difference is considered statistically significant.</p>
+</section>
+<section id="different-test-statistics">
+<h2>Different test statistics<a class="headerlink" href="#different-test-statistics" title="Link to this heading">#</a></h2>
+<p>When I present the “There is only one test” framework, many of the questions I get are about choosing the test statistic.  In many cases, it seems like an arbitrary choice.</p>
+<p>And in some ways it is, although rather than “arbitrary”, I would say it is a modeling decision informed by the context.  In this example, the researchers think there might be an <em>increase</em> in the proportion of resistant plants, so I chose a test statistic that measures an increase.</p>
+<p>If the researchers expected a <em>change</em> in resistance without specifying an increase or decrease, I might use the absolute value of the difference as a test statistic, because the absolute value measures magnitude without regard to sign.</p>
+<p>Using the <em>difference</em> in proportions was also a choice; another possibility is to use the <em>ratio</em> of proportions.  In the context of epidemiology, it is common to use <a class="reference external" href="https://en.wikipedia.org/wiki/Risk_ratio">risk ratios</a> to compare proportions.</p>
+<p>One benefit of the computational framework is that it is easy to try a different test statistic (or a different model of the null hypothesis) and see what effect it has on the results.</p>
+<p>Here’s a function that computes the ratio of proportions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">k1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">k1</span><span class="o">/</span><span class="n">n1</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">k2</span><span class="o">/</span><span class="n">n2</span>
+    <span class="k">return</span> <span class="n">p2</span> <span class="o">/</span> <span class="n">p1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s the observed risk ratio.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actual</span> <span class="o">=</span> <span class="n">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.9551282051282053
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can run the simulated experiments with this test statistic, and compute the p-value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_stat_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">test_stat</span><span class="p">(</span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> 
+                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)])</span>
+
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_stat_dist</span> <span class="o">&gt;=</span> <span class="n">actual</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.005)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The two test statistics yield pretty much the same p-values.  That’s good; it means that the interpretation of the results is not sensitive to our modeling choices.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="text_analysis.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Text analysis with Python</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tumbleweed-problem">The tumbleweed problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistics">Different test statistics</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Allen B. Downey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script>new Image().src="https://greenteapress.com/gh.gif?u="+encodeURIComponent(location.href)+"&r="+encodeURIComponent(document.referrer)</script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

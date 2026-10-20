@@ -1,0 +1,1974 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Statistical inference with resampling in Python: p-values for the Euro problem, bootstrap estimates of height from BRFSS data, and permutation tests on NSFG data." name="description" />
+<meta property="og:title" content="Teaching statistical inference with resampling" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://allendowney.github.io/CompStats/resampling.html" />
+<meta property="og:site_name" content="Computational Statistics" />
+<meta property="og:description" content="Statistical inference with resampling in Python: p-values for the Euro problem, bootstrap estimates of height from BRFSS data, and permutation tests on NSFG data." />
+<meta property="og:image" content="https://greenteapress.com/wp/wp-content/uploads/2025/04/think_stats_3e_cover_small.jpg" />
+<meta property="og:image:alt" content="Cover of Think Stats by Allen B. Downey, the book this tutorial is based on" />
+
+    <title>Teaching statistical inference with resampling &#8212; Computational Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'resampling';</script>
+    <link rel="canonical" href="https://allendowney.github.io/CompStats/resampling.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction to PMFs" href="pmf_intro.html" />
+    <link rel="prev" title="Hypothesis Testing" href="hypothesis.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Computational Statistics</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Computational Statistics: A Tutorial in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The workshop</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="effect_size.html">Effect Size</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Random Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hypothesis.html">Hypothesis Testing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Teaching statistical inference with resampling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extras</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pmf_intro.html">Introduction to PMFs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_analysis.html">Text analysis with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tumbleweed.html">There is only one test</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/AllenDowney/CompStats" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/resampling.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Teaching statistical inference with resampling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-euro-problem">The Euro problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p-values">P-values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation">Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantifying-precision">Quantifying precision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-sample-statistics">Other sample statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-resampling">Weighted resampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#are-first-babies-more-likely-to-be-late">Are first babies more likely to be late?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing">Hypothesis testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistics">Different test statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-object-oriented-framework">An object-oriented framework</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistic">Different test statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-model">Different model</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="teaching-statistical-inference-with-resampling">
+<h1>Teaching statistical inference with resampling<a class="headerlink" href="#teaching-statistical-inference-with-resampling" title="Link to this heading">#</a></h1>
+<p>Copyright 2018–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
+<p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/resampling.ipynb">Click here to run this notebook on Colab</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">basename</span><span class="p">,</span> <span class="n">exists</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">basename</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.request</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlretrieve</span>
+
+        <span class="n">local</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Downloaded "</span> <span class="o">+</span> <span class="n">local</span><span class="p">)</span>
+
+
+<span class="n">BASE</span> <span class="o">=</span> <span class="s2">"https://github.com/AllenDowney/CompStats/raw/master/"</span>
+<span class="n">download</span><span class="p">(</span><span class="n">BASE</span> <span class="o">+</span> <span class="s2">"brfss2016_subset.csv.gz"</span><span class="p">)</span>
+<span class="n">download</span><span class="p">(</span><span class="n">BASE</span> <span class="o">+</span> <span class="s2">"2002FemPreg.dct"</span><span class="p">)</span>
+<span class="n">download</span><span class="p">(</span><span class="n">BASE</span> <span class="o">+</span> <span class="s2">"2002FemPreg.dat.gz"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure Jupyter so figures appear in the notebook</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># Configure Jupyter to display the assigned value after an assignment</span>
+<span class="o">%</span><span class="k">config</span> InteractiveShell.ast_node_interactivity='last_expr_or_assign'
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-euro-problem">
+<h2>The Euro problem<a class="headerlink" href="#the-euro-problem" title="Link to this heading">#</a></h2>
+<p>In <em>Information Theory, Inference, and Learning Algorithms</em>, David MacKay writes, “A statistical statement appeared in <em>The Guardian</em> on Friday January 4, 2002:</p>
+<p><em>When spun on edge 250 times, a Belgian one-euro coin came
+up heads 140 times and tails 110. ‘It looks very suspicious
+to me’, said Barry Blight, a statistics lecturer at the London
+School of Economics. ‘If the coin were unbiased the chance of
+getting a result as extreme as that would be less than 7%’.</em></p>
+<p>But do these data give evidence that the coin is biased rather than fair?”</p>
+<p>Before we answer MacKay’s question, let’s unpack what Dr. Blight said:</p>
+<p>“If the coin were unbiased the chance of getting a result as extreme as that would be less than 7%”.</p>
+<p>To see where that comes from, I’ll simulate the result of spinning an “unbiased” coin, meaning that the probability of heads is 50%.</p>
+<p>Here’s an example with 10 spins:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False, False, False, False, False,  True, False,  True,  True,
+        True])
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">np.random.random</span></code> returns numbers between 0 and 1, uniformly distributed.  So the probability of being less than 0.5 is 50%.</p>
+<p>The sum of the array is the number of <code class="docutils literal notranslate"><span class="pre">True</span></code> elements, that is, the number of heads:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">spins</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(4)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can wrap that in a function that simulates <code class="docutils literal notranslate"><span class="pre">n</span></code> spins with probability <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">spin</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s an example with the actual sample size (250) and hypothetical probability (50%).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">heads</span><span class="p">,</span> <span class="n">tails</span> <span class="o">=</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">110</span>
+<span class="n">sample_size</span> <span class="o">=</span> <span class="n">heads</span> <span class="o">+</span> <span class="n">tails</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>250
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hypo_prob</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">spin</span><span class="p">(</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">hypo_prob</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(118)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each time we run this simulated experiment, we get a different outcome.</p>
+<p>Here’s a function that runs the experiment (250 spins) many times, and collects the outcomes (number of heads) in an array.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_experiments</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">[</span><span class="n">spin</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcomes</span> <span class="o">=</span> <span class="n">run_experiments</span><span class="p">(</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">hypo_prob</span><span class="p">,</span> <span class="mi">10000</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is an array of 10000 integers, each representing the number of heads in a simulated experiment.  The mean of <code class="docutils literal notranslate"><span class="pre">outcomes</span></code> is about 125:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">outcomes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(125.0893)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Which makes sense.  On average, the expected number of heads is the product of the hypothetical probability and the sample size:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expected</span> <span class="o">=</span> <span class="n">hypo_prob</span> <span class="o">*</span> <span class="n">sample_size</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>125.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see how much the values in <code class="docutils literal notranslate"><span class="pre">outcomes</span></code> differ from the expected value:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diffs</span> <span class="o">=</span> <span class="n">outcomes</span> <span class="o">-</span> <span class="n">expected</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following function plots a histogram of a sequence of values:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_hist</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'C0'</span><span class="p">)</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">patches</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">values</span><span class="p">,</span>
+                               <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">histtype</span><span class="o">=</span><span class="s1">'step'</span><span class="p">,</span> 
+                               <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+    
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Density'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">patches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s what the deviations from the expected value look like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_hist</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Sampling distribution (n=250)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Deviation from expected number of heads'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/adc9c72cb26eba41904a78bcb4d6b870dba5fd5fe31c948c7064035e96b63692.png" src="_images/adc9c72cb26eba41904a78bcb4d6b870dba5fd5fe31c948c7064035e96b63692.png" />
+</div>
+</div>
+<p>This is the “sampling distribution” of deviations.  It shows how much variation we should expect between experiments with this sample size (n = 250).</p>
+</section>
+<section id="p-values">
+<h2>P-values<a class="headerlink" href="#p-values" title="Link to this heading">#</a></h2>
+<p>Getting back to this line:</p>
+<p>“If the coin were unbiased the chance of getting a result as extreme as that would be less than 7%”.</p>
+<p>Let’s count how many times, in 10000 attempts, the outcome is “as extreme as” the observed outcome, 140 heads.</p>
+<p>The observed deviation is the difference between the observed and expected number of heads:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">observed_diff</span> <span class="o">=</span> <span class="n">heads</span> <span class="o">-</span> <span class="n">expected</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see how many times the simulated <code class="docutils literal notranslate"><span class="pre">diffs</span></code> exceed the observed deviation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diffs</span> <span class="o">&gt;=</span> <span class="n">observed_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0313)
+</pre></div>
+</div>
+</div>
+</div>
+<p>It’s around 3%.  But Dr. Blight said 7%.  Where did that come from?</p>
+<p>So far, we only counted the cases where the outcome is <em>more</em> heads than expected.  We might also want to count the cases where the outcome is <em>fewer</em> than expected.</p>
+<p>Here’s the probability of falling below the expected number by 15 or more.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diffs</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">observed_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0334)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To get the total probability of a result “as extreme as that”, we can use the absolute value of the simulated differences:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">observed_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0647)
+</pre></div>
+</div>
+</div>
+</div>
+<p>So that’s consistent with what Dr. Blight reported.</p>
+<p>To show what that looks like graphically, I’ll use the following function, which fills in the histogram between <code class="docutils literal notranslate"><span class="pre">low</span></code> and <code class="docutils literal notranslate"><span class="pre">high</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">):</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'C0'</span><span class="p">)</span>
+    <span class="n">fill</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> 
+                       <span class="n">clip_path</span><span class="o">=</span><span class="n">patch</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following plot shows the sampling distribution of <code class="docutils literal notranslate"><span class="pre">diffs</span></code> with two regions shaded.  These regions represent the probability that an unbiased coin yields a deviation from the expected as extreme as 15.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">patch</span> <span class="o">=</span> <span class="n">plot_hist</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span>
+
+<span class="n">low</span> <span class="o">=</span> <span class="n">observed_diff</span>
+<span class="n">high</span> <span class="o">=</span> <span class="n">diffs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span>
+
+<span class="n">low</span> <span class="o">=</span> <span class="n">diffs</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">high</span> <span class="o">=</span> <span class="o">-</span><span class="n">observed_diff</span>
+<span class="n">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Sampling distribution (n=250)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Deviation from expected number of heads'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/28a27edd9fd16b073a5ded0b51d28e17136c1b77749f08fa63b017e05be6a3e1.png" src="_images/28a27edd9fd16b073a5ded0b51d28e17136c1b77749f08fa63b017e05be6a3e1.png" />
+</div>
+</div>
+<p>These results show that there is a non-negligible chance of getting a result as extreme as 140 heads, even if the coin is actually fair.</p>
+<p>So even if the results are “suspicious” they don’t provide compelling evidence that the coin is biased.</p>
+</section>
+<section id="estimation">
+<h2>Estimation<a class="headerlink" href="#estimation" title="Link to this heading">#</a></h2>
+<p>Suppose we want to estimate the average height of men in the U.S.</p>
+<p>We can use data from the <a class="reference external" href="https://www.cdc.gov/brfss/index.html">BRFSS</a>:</p>
+<p>“The Behavioral Risk Factor Surveillance System (BRFSS) is the nation’s premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services.”</p>
+<p>The following function reads the most recent data from BRFSS (2016), selects just the columns we need, and saves the results in a compressed CSV file, <code class="docutils literal notranslate"><span class="pre">brfss2016_subset.csv.gz</span></code>, which is in the repository for this notebook.</p>
+<p>The original data file is large, so it is much faster to read the CSV file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_brfss</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Read the BRFSS dataset, select columns, and save as CSV.</span>
+<span class="sd">    """</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sas</span><span class="p">(</span><span class="s1">'LLCP2016.XPT'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'xport'</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'SEX'</span><span class="p">,</span> <span class="s1">'HTM4'</span><span class="p">,</span> <span class="s1">'WTKG3'</span><span class="p">,</span> <span class="s1">'_LLCPWT'</span><span class="p">]</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">selected</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'brfss2016_subset.csv.gz'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can read the CSV file.  The result is a Pandas DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'brfss2016_subset.csv.gz'</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SEX</th>
+      <th>HTM4</th>
+      <th>WTKG3</th>
+      <th>_LLCPWT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>173.0</td>
+      <td>6123.0</td>
+      <td>767.844566</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.0</td>
+      <td>160.0</td>
+      <td>6940.0</td>
+      <td>329.659884</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.0</td>
+      <td>165.0</td>
+      <td>5443.0</td>
+      <td>290.749306</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.0</td>
+      <td>185.0</td>
+      <td>9979.0</td>
+      <td>211.039206</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.0</td>
+      <td>168.0</td>
+      <td>5670.0</td>
+      <td>1582.539834</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">SEX</span></code> to select male respondents.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">males</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">SEX</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">males</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>210606
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we select height data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">males</span><span class="o">.</span><span class="n">HTM4</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(2.894979250353741)
+</pre></div>
+</div>
+</div>
+</div>
+<p>About 3% of the values are missing.</p>
+<p>Here are the mean and standard deviation, ignoring missing data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Mean male height in cm ='</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Std male height in cm ='</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean male height in cm = 178.06121490985726
+Std male height in cm = 7.792878100892027
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="quantifying-precision">
+<h2>Quantifying precision<a class="headerlink" href="#quantifying-precision" title="Link to this heading">#</a></h2>
+<p>At this point we have an estimate of the average adult male height.  We’d like to know how accurate this estimate is, and how precise.  In the context of estimation, these words have a <a class="reference external" href="https://en.wikipedia.org/wiki/Accuracy_and_precision">technical distinction</a>:</p>
+<p><em>“Given a set of data points from repeated measurements of the same quantity, the set can be said to be precise if the values are close to each other, while the set can be said to be accurate if their average is close to the true value of the quantity being measured.”</em></p>
+<p>Usually accuracy is what we really care about, but it’s hard to measure accuracy unless you know the true value.  And if you know the true value, you don’t have to estimate it.</p>
+<p>Quantifying precision is not as useful, but it is much easier.  Here’s one way to do it:</p>
+<ol class="arabic simple">
+<li><p>Use the data you have to make a model of the population.</p></li>
+<li><p>Use the model to simulate the data collection process.</p></li>
+<li><p>Use the simulated data to compute an estimate.</p></li>
+<li><p>Repeat steps 1-3 and collect the results.</p></li>
+</ol>
+<p>To model the population, I’ll use <strong>resampling</strong>; that is, I will treat the observed measurements as if they were taken from the entire population, and I will draw random samples from them.</p>
+<p>Here’s a function that takes observed measurements and returns a new set of measurements with the same sample size.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">replace=True</span></code>, we sample with replacement, which means that some measurements might be chosen more than once, and some might not be chosen at all.</p>
+<p>(If we sample <em>without</em> replacement, the resampled data is always identical to the original, so that’s no good.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">resample</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> 
+                            <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To simulate an experiment, we run <code class="docutils literal notranslate"><span class="pre">resample</span></code> to generate data and <code class="docutils literal notranslate"><span class="pre">nanmean</span></code> to compute the mean (ignoring missing data).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resampled_data</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">resampled_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(178.084596120171)
+</pre></div>
+</div>
+</div>
+</div>
+<p>And we can simulate 1000 experiments and collect the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> sampling_dist_mean = \
+    <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">resample</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> \
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)];</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.49 s, sys: 951 ms, total: 3.44 s
+Wall time: 3.44 s
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is the “sampling distribution”, which shows how much the results of the experiment would vary if we ran it many times.  Here’s what it looks like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_hist</span><span class="p">(</span><span class="n">sampling_dist_mean</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Sampling distribution of the mean'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Mean adult male height, U.S.'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6353f71740fcf47ac207b67ad74cd9935066f07b3fde999f163069ddb43b1e11.png" src="_images/6353f71740fcf47ac207b67ad74cd9935066f07b3fde999f163069ddb43b1e11.png" />
+</div>
+</div>
+<p>The width of this distribution shows how much the results vary from one experiment to the next.</p>
+<p>We can quantify this variability by computing the standard deviation of the sampling distribution, which is called “standard error”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">std_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">sampling_dist_mean</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.01769828262861241)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also summarize the sampling distribution with a “confidence interval”, which is a range that contains a specified fraction, like 90%, of the values in <code class="docutils literal notranslate"><span class="pre">sampling_dist_mean</span></code>.</p>
+<p>The central 90% confidence interval is between the 5th and 95th percentiles of the sampling distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_90</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">sampling_dist_mean</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">95</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([178.02951276, 178.08952944])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following function plots a histogram and shades the 90% confidence interval.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_sampling_dist</span><span class="p">(</span><span class="n">dist</span><span class="p">):</span>
+    <span class="n">patch</span> <span class="o">=</span> <span class="n">plot_hist</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">95</span><span class="p">])</span>
+    <span class="n">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Mean = '</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Std error = '</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'90% CI = '</span><span class="p">,</span> <span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s what it looks like for the sampling distribution of mean adult height:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">sampling_dist_mean</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Mean adult male height, U.S. (%)'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean =  178.06027748143575
+Std error =  0.01769828262861241
+90% CI =  (np.float64(178.02951275886963), np.float64(178.0895294388313))
+</pre></div>
+</div>
+<img alt="_images/214cc3130d7f67ad8ac1b4006faee90d9705bc8c1efb8a341793d77523c23d22.png" src="_images/214cc3130d7f67ad8ac1b4006faee90d9705bc8c1efb8a341793d77523c23d22.png" />
+</div>
+</div>
+<p>For an experiment like this, we can compute the standard error analytically.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">analytic_stderr</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is close to what we observed computationally.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analytic_stderr</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">std_err</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.016980970715885745), np.float64(0.01769828262861241))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-sample-statistics">
+<h2>Other sample statistics<a class="headerlink" href="#other-sample-statistics" title="Link to this heading">#</a></h2>
+<p>One nice thing about using computation is that it is easy to compute the sampling distribution for other statistics.</p>
+<p>For example, suppose we want to estimate the coefficient of variation for adult male height (standard deviation as a percentage of the mean).  We can define a function to compute it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">coef_var</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And estimate the sampling distribution by running simulated experiments.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sampling_dist_cv</span> <span class="o">=</span> <span class="p">[</span><span class="n">coef_var</span><span class="p">(</span><span class="n">resample</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)];</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s what the sampling distribution of CV looks like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">sampling_dist_cv</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Sampling distribution of CV %'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'CV adult male height, U.S. (%)'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean =  4.3765423194516915
+Std error =  0.009626855774270493
+90% CI =  (np.float64(4.361073922387723), np.float64(4.391944430007911))
+</pre></div>
+</div>
+<img alt="_images/5bcd855073f09974cbcfdc6ed345ecf9b4bba64a72629b4b1b8bb4f74471c01b.png" src="_images/5bcd855073f09974cbcfdc6ed345ecf9b4bba64a72629b4b1b8bb4f74471c01b.png" />
+</div>
+</div>
+</section>
+<section id="weighted-resampling">
+<h2>Weighted resampling<a class="headerlink" href="#weighted-resampling" title="Link to this heading">#</a></h2>
+<p>Another nice thing about resampling is that we can extend it to handle the case where the data are weighted.  In fact, the BRFSS deliberately oversamples some groups, so each respondent has a weight that indicates how many people in the population they represent.</p>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">_LLCPWT</span></code> contains these weights, which we can normalize so they add up to 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_sampling_weights</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">_LLCPWT</span>
+    <span class="n">p</span> <span class="o">/=</span> <span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">p</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sampling_weights</span> <span class="o">=</span> <span class="n">compute_sampling_weights</span><span class="p">(</span><span class="n">males</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can pass these weights to <code class="docutils literal notranslate"><span class="pre">np.random.choice</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">resample_weighted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> 
+                            <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> sampling_dist_mean_weighted = \
+    <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">resample_weighted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sampling_weights</span><span class="p">))</span> \
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)];</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 8s, sys: 4.2 s, total: 1min 13s
+Wall time: 1min 13s
+</pre></div>
+</div>
+</div>
+</div>
+<p>If we take the mean of the sampling distribution, we get an estimate of the average male height, taking account of the sampling weights.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xbar_weighted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sampling_dist_mean_weighted</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(177.54278962889853)
+</pre></div>
+</div>
+</div>
+</div>
+<p>And we can compare to the unweighted version:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sampling_dist_mean</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(178.06027748143575)
+</pre></div>
+</div>
+</div>
+</div>
+<p>With this dataset, the weighted and unweighted estimates are not very different, which probably means there are no substantial differences in height between the groups that are oversampled or undersampled.</p>
+</section>
+<section id="are-first-babies-more-likely-to-be-late">
+<h2>Are first babies more likely to be late?<a class="headerlink" href="#are-first-babies-more-likely-to-be-late" title="Link to this heading">#</a></h2>
+<p>When my wife and I were expecting our first baby, we heard that first babies are more likely to be late.  We also hear that first babies are more likely to be early.  Neither claim was supported by evidence.</p>
+<p>Fortunately, I am a data scientist!  Also fortunately, the CDC runs the National Survey of Family Growth (NSFG), which “gathers information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health.”</p>
+<p>I got the data from their web page, https://www.cdc.gov/nchs/nsfg/index.htm, and wrote some code to get it into a Pandas Dataframe:</p>
+<p>The following functions read the pregnancy data from the National Survey of Family Growth (NSFG).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_stata_dct</span><span class="p">(</span><span class="n">dct_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reads a Stata dictionary file.</span>
+
+<span class="sd">    dct_file: string filename</span>
+
+<span class="sd">    returns: list of (start, end) column specs, list of variable names</span>
+<span class="sd">    """</span>
+    <span class="n">starts</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dct_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">'_column\(([^)]*)\)'</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">starts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">colspecs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="n">starts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">colspecs</span><span class="p">,</span> <span class="n">names</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_fem_preg</span><span class="p">(</span><span class="n">dct_file</span><span class="o">=</span><span class="s1">'2002FemPreg.dct'</span><span class="p">,</span> <span class="n">dat_file</span><span class="o">=</span><span class="s1">'2002FemPreg.dat.gz'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reads the NSFG pregnancy data.</span>
+
+<span class="sd">    returns: DataFrame</span>
+<span class="sd">    """</span>
+    <span class="n">colspecs</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">read_stata_dct</span><span class="p">(</span><span class="n">dct_file</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_fwf</span><span class="p">(</span><span class="n">dat_file</span><span class="p">,</span> <span class="n">colspecs</span><span class="o">=</span><span class="n">colspecs</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">'gzip'</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># defragment the columns read_fwf creates</span>
+
+    <span class="c1"># replace 'not ascertained', 'refused', 'don't know' with NaN</span>
+    <span class="n">na_vals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">99</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">na_vals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_oz'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_oz'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">na_vals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="c1"># birthwgt_lb contains at least one bogus value (51 lbs)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># birth weight is stored in two columns, lbs and oz;</span>
+    <span class="c1"># convert to a single column in lb</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'totalwgt_lb'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_oz'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">16</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">read_fem_preg</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(13593, 244)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The file contains 13,593 rows, one for each pregnancy reported by one of the survey respondents, and 244 columns, one for each variable.</p>
+<p>Here are the first few lines.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>caseid</th>
+      <th>pregordr</th>
+      <th>howpreg_n</th>
+      <th>howpreg_p</th>
+      <th>moscurrp</th>
+      <th>nowprgdk</th>
+      <th>pregend1</th>
+      <th>pregend2</th>
+      <th>nbrnaliv</th>
+      <th>multbrth</th>
+      <th>...</th>
+      <th>laborfor_i</th>
+      <th>religion_i</th>
+      <th>metro_i</th>
+      <th>basewgt</th>
+      <th>adj_mod_basewgt</th>
+      <th>finalwgt</th>
+      <th>secu_p</th>
+      <th>sest</th>
+      <th>cmintvw</th>
+      <th>totalwgt_lb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3410.389399</td>
+      <td>3869.349602</td>
+      <td>6448.271112</td>
+      <td>2</td>
+      <td>9</td>
+      <td>1231</td>
+      <td>8.8125</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3410.389399</td>
+      <td>3869.349602</td>
+      <td>6448.271112</td>
+      <td>2</td>
+      <td>9</td>
+      <td>1231</td>
+      <td>7.8750</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5.0</td>
+      <td>NaN</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7226.301740</td>
+      <td>8567.549110</td>
+      <td>12999.542264</td>
+      <td>2</td>
+      <td>12</td>
+      <td>1231</td>
+      <td>9.1250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7226.301740</td>
+      <td>8567.549110</td>
+      <td>12999.542264</td>
+      <td>2</td>
+      <td>12</td>
+      <td>1231</td>
+      <td>7.0000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7226.301740</td>
+      <td>8567.549110</td>
+      <td>12999.542264</td>
+      <td>2</td>
+      <td>12</td>
+      <td>1231</td>
+      <td>6.1875</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 244 columns</p>
+</div></div></div>
+</div>
+<p>The variables we need are <code class="docutils literal notranslate"><span class="pre">outcome</span></code>, which indicates whether the pregnancy ended in a live birth, <code class="docutils literal notranslate"><span class="pre">birthord</span></code>, which indicates birth order, and <code class="docutils literal notranslate"><span class="pre">prglngth</span></code>, which is pregnancy length in weeks.</p>
+<p>From all live births, we can select first babies (<code class="docutils literal notranslate"><span class="pre">birthord==1</span></code>) and others:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">live</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">firsts</span> <span class="o">=</span> <span class="n">live</span><span class="p">[</span><span class="n">live</span><span class="o">.</span><span class="n">birthord</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">others</span> <span class="o">=</span> <span class="n">live</span><span class="p">[</span><span class="n">live</span><span class="o">.</span><span class="n">birthord</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="n">firsts</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">others</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4413, 4735)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can get the list of pregnancy lengths for the two groups and compute their means:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group1</span> <span class="o">=</span> <span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span>
+<span class="n">group2</span> <span class="o">=</span> <span class="n">others</span><span class="o">.</span><span class="n">prglngth</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">group1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">group2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(38.60095173351461), np.float64(38.52291446673706))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The difference in means is small, about 0.078 weeks.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">=</span> <span class="n">group1</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">group2</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.07803726677754952)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Which is about 13 hours.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(13.11026081862832)
+</pre></div>
+</div>
+</div>
+</div>
+<p>So first babies are born about 13 hours later than other babies, on average.</p>
+</section>
+<section id="hypothesis-testing">
+<h2>Hypothesis testing<a class="headerlink" href="#hypothesis-testing" title="Link to this heading">#</a></h2>
+<p>The size of this “apparent effect” is small, and we can’t tell whether it is real or the result of random sampling.  After all, we did not survey the entire population; we only surveyed a random sample.</p>
+<p>There are two ways the sample might deviate from the population:</p>
+<ul class="simple">
+<li><p>Systematic errors: The pregnancies included in the survey might be different from other pregnancies in a way that biases the results.</p></li>
+<li><p>Sampling errors: The pregnancy lengths in one group might be a little higher, or lower, than in the other group because of random variability.</p></li>
+</ul>
+<p>We can never rule out the possibility of systematic errors, but usually we can test whether an apparent effect could be explained by random sampling.</p>
+<p>Here’s how:</p>
+<ol class="arabic simple">
+<li><p>Choose a “test statistic” that measures the size of the effect; in this case, the test statistic we started with is the difference in mean pregnancy length.</p></li>
+<li><p>Use the data to make a model of the population under the assumption that there is actually no difference between the groups.  This assumption is called the “null hypothesis”.</p></li>
+<li><p>Use the model to simulate the data collection process.</p></li>
+<li><p>Use the simulated data to compute the test statistic.</p></li>
+<li><p>Repeat steps 2-4 and collect the results.</p></li>
+<li><p>See how often the simulated test statistic exceeds the observed difference.</p></li>
+</ol>
+<p>The following function computes the test statistic:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">group1</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">group2</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s how we use it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span>
+<span class="n">actual</span> <span class="o">=</span> <span class="n">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.07803726677754952)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we need a model of the population under the assumption that there is actually no difference between the groups.</p>
+<p>Well, if there’s no difference, we can put the two groups together and shuffle them, then divide them at random into two groups with the same sizes.</p>
+<p>That’s what this function does:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">group1</span><span class="p">,</span> <span class="n">group2</span><span class="p">))</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="p">[</span><span class="n">n</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s how we run it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[array([42, 39, 38, ..., 39, 39, 39], shape=(4413,)),
+ array([39, 38, 39, ..., 39, 39, 39], shape=(4735,))]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is a list of two arrays, which we can pass to <code class="docutils literal notranslate"><span class="pre">test_stat</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_stat</span><span class="p">(</span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(-0.01127321097717271)
+</pre></div>
+</div>
+</div>
+</div>
+<p>That’s the result of one simulated experiment.</p>
+<p>We can run the experiment 1000 times and collect the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_stat_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">test_stat</span><span class="p">(</span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> 
+                           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0008537509532526997)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is the “sampling distribution of the test statistic under the null hypothesis”.</p>
+<p>The mean of this distribution is close to zero, which is not surprising because it is based on the assumption that there is actually no difference between the groups.</p>
+<p>Here’s a function to plot the distribution of test stats:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_test_stats</span><span class="p">(</span><span class="n">test_stats</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Difference in mean (weeks)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Distribution of test stat under null hypothesis'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">plot_hist</span><span class="p">(</span><span class="n">test_stats</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And here’s what it looks like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_test_stats</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bfcb890540e85f6d55dd33207cdb7bc303d0f81e3dd3d797654d7d9a283266ab.png" src="_images/bfcb890540e85f6d55dd33207cdb7bc303d0f81e3dd3d797654d7d9a283266ab.png" />
+</div>
+</div>
+<p>Now we can compute the probability that the test statistic, under the null hypothesis, exceeds the observed differences in the means.</p>
+<p>This probability is called a “p-value”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_stat_dist</span> <span class="o">&gt;=</span> <span class="n">actual</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.075)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this example the p-value is about 8%, which means that the difference we saw, 13 hours, could plausibly occur due to random sampling, even if there is actually no difference between the groups.</p>
+<p>The following figure shows the p-value as the shaded area of the distribution above the observed value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">annotate</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+    <span class="n">arrowprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">headwidth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
+                 <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                 <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">length</span><span class="p">),</span>
+                 <span class="n">ha</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span>
+                 <span class="n">arrowprops</span><span class="o">=</span><span class="n">arrowprops</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">patch</span> <span class="o">=</span> <span class="n">plot_test_stats</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+<span class="n">low</span> <span class="o">=</span> <span class="n">actual</span>
+<span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+<span class="n">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span>
+<span class="n">annotate</span><span class="p">(</span><span class="s1">'p-value'</span><span class="p">,</span> <span class="mf">1.2</span><span class="o">*</span><span class="n">actual</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/e75f59c3c73f8d85637f287d9877407016de7b1f2627a65b8afa70d02aaa8947.png" src="_images/e75f59c3c73f8d85637f287d9877407016de7b1f2627a65b8afa70d02aaa8947.png" />
+</div>
+</div>
+</section>
+<section id="different-test-statistics">
+<h2>Different test statistics<a class="headerlink" href="#different-test-statistics" title="Link to this heading">#</a></h2>
+<p>What we computed in the previous section is the probability that first babies would be <em>later</em> than 13 hours, on average, under the null hypothesis.</p>
+<p>Depending on the context, we might also want to know the probability that first babies would be <em>earlier</em> on average.</p>
+<p>We can include both possibilities by defining a new test statistic, the <em>absolute</em> difference in means.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">group1</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">group2</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s the observed difference with this test stat.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actual</span> <span class="o">=</span> <span class="n">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.07803726677754952)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since the actual difference is positive, its absolute value is the same.</p>
+<p>We can run the simulated experiments with this test statistic, and print the p-value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_stat_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">test_stat</span><span class="p">(</span><span class="n">run_model</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> 
+                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)])</span>
+
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_stat_dist</span> <span class="o">&gt;=</span> <span class="n">actual</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.156)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s what the distribution looks like for this test statistic.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">patch</span> <span class="o">=</span> <span class="n">plot_test_stats</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+<span class="n">low</span> <span class="o">=</span> <span class="n">actual</span>
+<span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">test_stat_dist</span><span class="p">)</span>
+<span class="n">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span>
+<span class="n">annotate</span><span class="p">(</span><span class="s1">'p-value'</span><span class="p">,</span> <span class="mf">1.2</span><span class="o">*</span><span class="n">actual</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/eea4e331b31ad1522fc4f947b08a635e709d5d28590e6123fca7627efe0912f3.png" src="_images/eea4e331b31ad1522fc4f947b08a635e709d5d28590e6123fca7627efe0912f3.png" />
+</div>
+</div>
+<p>With this test statistic, the p-value is around 15%, which means it would not be uncommon to see an absolute difference as big as 13 hours, even if there is actually no difference between the groups.</p>
+</section>
+<section id="an-object-oriented-framework">
+<h2>An object-oriented framework<a class="headerlink" href="#an-object-oriented-framework" title="Link to this heading">#</a></h2>
+<p>We can organize the code from the previous sections in a class definition.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">HypothesisTest</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Represents a hypothesis test."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Initializes.</span>
+
+<span class="sd">        data: data in whatever form is relevant</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_stat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">test_stat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_model</span><span class="p">())</span>
+                                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">p_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Computes the p-value.</span>
+
+<span class="sd">        returns: float p-value</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_stats</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_test_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Draws a Cdf with vertical lines at the observed test stat.</span>
+<span class="sd">        """</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">plot_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_stats</span><span class="p">)</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actual</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_stats</span><span class="p">)</span>
+        <span class="n">fill_hist</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Distribution of test stat under null'</span><span class="p">)</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Computes the test statistic.</span>
+
+<span class="sd">        data: data in whatever form is relevant        </span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="n">UnimplementedMethodException</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Run the model of the null hypothesis.</span>
+
+<span class="sd">        returns: simulated data</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="n">UnimplementedMethodException</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">HypothesisTest</span></code> provides implementations for some methods, because they are the same for all hypothesis tests.</p>
+<p>But it leaves some methods unimplemented.  We can write child classes to define the unimplemented methods.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">PermutationTest</span></code> implements <code class="docutils literal notranslate"><span class="pre">run_model</span></code> by combining the groups and shuffling them:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PermutationTest</span><span class="p">(</span><span class="n">HypothesisTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Hypothesis test based on permutation."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Run the model of the null hypothesis.</span>
+
+<span class="sd">        returns: simulated data</span>
+<span class="sd">        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="p">[</span><span class="n">n</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DiffMeansPermute</span></code> extends <code class="docutils literal notranslate"><span class="pre">PermutationTest</span></code> and provides <code class="docutils literal notranslate"><span class="pre">test_stat</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DiffMeansPermute</span><span class="p">(</span><span class="n">PermutationTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Tests a difference in means by permutation."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Computes the test statistic.</span>
+
+<span class="sd">        data: data in whatever form is relevant        </span>
+<span class="sd">        """</span>
+        <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">group1</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">group2</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can test the absolute difference in means by permutation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ht</span> <span class="o">=</span> <span class="n">DiffMeansPermute</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">p_value</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Diff means permute pregnancy length'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'actual ='</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">actual</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'p-value ='</span><span class="p">,</span> <span class="n">p_value</span><span class="p">)</span>
+<span class="n">ht</span><span class="o">.</span><span class="n">plot_test_stats</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Difference in mean (weeks)'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diff means permute pregnancy length
+actual = 0.07803726677754952
+p-value = 0.163
+</pre></div>
+</div>
+<img alt="_images/9c7f03f8e9f1dd559ea3a38f888a8a0dfacfb622dac63b867d4bc46231e3724e.png" src="_images/9c7f03f8e9f1dd559ea3a38f888a8a0dfacfb622dac63b867d4bc46231e3724e.png" />
+</div>
+</div>
+</section>
+<section id="different-test-statistic">
+<h2>Different test statistic<a class="headerlink" href="#different-test-statistic" title="Link to this heading">#</a></h2>
+<p>It’s easy to run a test with a different test statistic.  For example, if we think that first babies might be more variable than others, we could use the difference in standard deviation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DiffStdPermute</span><span class="p">(</span><span class="n">PermutationTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Tests a difference in standard deviation by permutation."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_stat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Computes the test statistic.</span>
+
+<span class="sd">        data: data in whatever form is relevant        </span>
+<span class="sd">        """</span>
+        <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">group1</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">-</span> <span class="n">group2</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the results</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ht</span> <span class="o">=</span> <span class="n">DiffStdPermute</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">p_value</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Diff std permute pregnancy length'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'actual ='</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">actual</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'p-value ='</span><span class="p">,</span> <span class="n">p_value</span><span class="p">)</span>
+<span class="n">ht</span><span class="o">.</span><span class="n">plot_test_stats</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Difference in standard deviation (weeks)'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diff std permute pregnancy length
+actual = 0.17604906422948297
+p-value = 0.157
+</pre></div>
+</div>
+<img alt="_images/4650c2656c1ee2512fab8422c14473abe6160f9c305591d457b84b18168cc3fa.png" src="_images/4650c2656c1ee2512fab8422c14473abe6160f9c305591d457b84b18168cc3fa.png" />
+</div>
+</div>
+<p>The observed difference in standard deviation is about 0.17 weeks.</p>
+<p>The p-value is around 17%, which indicates that, even if there is actually no difference between the groups, there is a non-negligible chance that we could see a difference in standard deviation as big as 0.17 weeks due to random sampling.</p>
+</section>
+<section id="different-model">
+<h2>Different model<a class="headerlink" href="#different-model" title="Link to this heading">#</a></h2>
+<p>It’s also easy to run with a different model.  Instead of shuffling the observed data, we could use the data to choose the parameters of a normal distribution, and then draw random samples:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RandomNormalTest</span><span class="p">(</span><span class="n">HypothesisTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Tests by drawing values from a normal distribution."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Run the model of the null hypothesis.</span>
+
+<span class="sd">        returns: simulated data</span>
+<span class="sd">        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pool</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+        <span class="n">random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">random</span><span class="p">,</span> <span class="p">[</span><span class="n">n</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can make a class that tests a difference in means by drawing values from a normal distribution:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DiffMeansNormal</span><span class="p">(</span><span class="n">PermutationTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Tests a difference in means using a normal distribution."""</span>
+    
+    <span class="n">test_stat</span> <span class="o">=</span> <span class="n">DiffMeansPermute</span><span class="o">.</span><span class="n">test_stat</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And here are the results:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ht</span> <span class="o">=</span> <span class="n">DiffMeansNormal</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">ht</span><span class="o">.</span><span class="n">p_value</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Diff means normal pregnancy length'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'actual ='</span><span class="p">,</span> <span class="n">ht</span><span class="o">.</span><span class="n">actual</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'p-value ='</span><span class="p">,</span> <span class="n">p_value</span><span class="p">)</span>
+<span class="n">ht</span><span class="o">.</span><span class="n">plot_test_stats</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Difference in mean (weeks)'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diff means normal pregnancy length
+actual = 0.07803726677754952
+p-value = 0.17
+</pre></div>
+</div>
+<img alt="_images/8f683e28ea24a6722ef0e2eef48aa7fa4672d6da803cd90309e9406a771949fa.png" src="_images/8f683e28ea24a6722ef0e2eef48aa7fa4672d6da803cd90309e9406a771949fa.png" />
+</div>
+</div>
+<p>The results from this model are not substantially different, which suggests that they do not depend on arbitrary modeling decisions, and that’s good.</p>
+<p>For this example, the permutation test is probably better because it does not make any assumptions about the distribution of pregnancy lengths.</p>
+<p>If the sample size were substantially smaller, the model that draws from the normal distribution might be better.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="hypothesis.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Hypothesis Testing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pmf_intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Introduction to PMFs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-euro-problem">The Euro problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p-values">P-values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation">Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantifying-precision">Quantifying precision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-sample-statistics">Other sample statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weighted-resampling">Weighted resampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#are-first-babies-more-likely-to-be-late">Are first babies more likely to be late?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing">Hypothesis testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistics">Different test statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-object-oriented-framework">An object-oriented framework</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistic">Different test statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-model">Different model</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Allen B. Downey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script>new Image().src="https://greenteapress.com/gh.gif?u="+encodeURIComponent(location.href)+"&r="+encodeURIComponent(document.referrer)</script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

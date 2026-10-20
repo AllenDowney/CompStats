@@ -1,0 +1,1733 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Histograms and probability mass functions in Python: dice, pregnancy lengths of first babies, and word frequencies in Grimm's fairy tales." name="description" />
+<meta property="og:title" content="Introduction to PMFs" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://allendowney.github.io/CompStats/pmf_intro.html" />
+<meta property="og:site_name" content="Computational Statistics" />
+<meta property="og:description" content="Histograms and probability mass functions in Python: dice, pregnancy lengths of first babies, and word frequencies in Grimm's fairy tales." />
+<meta property="og:image" content="https://greenteapress.com/wp/wp-content/uploads/2025/04/think_stats_3e_cover_small.jpg" />
+<meta property="og:image:alt" content="Cover of Think Stats by Allen B. Downey, the book this tutorial is based on" />
+
+    <title>Introduction to PMFs &#8212; Computational Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pmf_intro';</script>
+    <link rel="canonical" href="https://allendowney.github.io/CompStats/pmf_intro.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Text analysis with Python" href="text_analysis.html" />
+    <link rel="prev" title="Teaching statistical inference with resampling" href="resampling.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Computational Statistics</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Computational Statistics: A Tutorial in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">The workshop</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="effect_size.html">Effect Size</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Random Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hypothesis.html">Hypothesis Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">Teaching statistical inference with resampling</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extras</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction to PMFs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_analysis.html">Text analysis with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tumbleweed.html">There is only one test</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/AllenDowney/CompStats" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/pmf_intro.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introduction to PMFs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hist-objects">Hist objects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#are-first-babies-more-likely-to-be-late">Are first babies more likely to be late?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word-frequencies">Word Frequencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-grams">n-grams</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-pmfs">
+<h1>Introduction to PMFs<a class="headerlink" href="#introduction-to-pmfs" title="Link to this heading">#</a></h1>
+<p>Copyright 2015–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
+<p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/pmf_intro.ipynb">Click here to run this notebook on Colab</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">basename</span><span class="p">,</span> <span class="n">exists</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">basename</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.request</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlretrieve</span>
+
+        <span class="n">local</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Downloaded "</span> <span class="o">+</span> <span class="n">local</span><span class="p">)</span>
+
+
+<span class="n">BASE</span> <span class="o">=</span> <span class="s2">"https://github.com/AllenDowney/CompStats/raw/master/"</span>
+<span class="n">download</span><span class="p">(</span><span class="n">BASE</span> <span class="o">+</span> <span class="s2">"2002FemPreg.dct"</span><span class="p">)</span>
+<span class="n">download</span><span class="p">(</span><span class="n">BASE</span> <span class="o">+</span> <span class="s2">"2002FemPreg.dat.gz"</span><span class="p">)</span>
+<span class="n">download</span><span class="p">(</span><span class="n">BASE</span> <span class="o">+</span> <span class="s2">"pg2591.txt"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this line makes Jupyter show figures in the notebook</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<section id="hist-objects">
+<h2>Hist objects<a class="headerlink" href="#hist-objects" title="Link to this heading">#</a></h2>
+<p>A histogram is a map from each possible value to the number of times it appears.  A map can be a mathematical function or, as in the examples below, a Python data structure that provides the ability to look up a value and get its probability.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Counter</span></code> is a data structure provided by Python; I am defining a new data structure, called a <code class="docutils literal notranslate"><span class="pre">Hist</span></code>, that has all the features of a Counter, plus a few more that I define.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Hist</span><span class="p">(</span><span class="n">Counter</span><span class="p">):</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Returns the Pmf of the sum of elements from self and other."""</span>
+        <span class="k">return</span> <span class="n">Hist</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">elements</span><span class="p">()))</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">choice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Chooses a random element."""</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">()))</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Plots the Pmf."""</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Values'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Counts'</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">ranks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Returns ranks and counts as lists."""</span>
+        <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As an example, I’ll make a Hist of the letters in my name:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hist</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="s1">'allen'</span><span class="p">)</span>
+<span class="n">hist</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hist({'l': 2, 'a': 1, 'e': 1, 'n': 1})
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can look up a letter and get the corresponding count:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hist</span><span class="p">[</span><span class="s1">'l'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+</div>
+</div>
+<p>Or loop through all the letters and print their counts:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">hist</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">letter</span><span class="p">,</span> <span class="n">hist</span><span class="p">[</span><span class="n">letter</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a 1
+l 2
+e 1
+n 1
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Counter</span></code> provides <code class="docutils literal notranslate"><span class="pre">most_common</span></code>, which makes a list of (element, count) pairs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hist</span><span class="o">.</span><span class="n">most_common</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('l', 2), ('a', 1), ('e', 1), ('n', 1)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here they are in a more readable form:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">letter</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">hist</span><span class="o">.</span><span class="n">most_common</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">letter</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>l 2
+a 1
+e 1
+n 1
+</pre></div>
+</div>
+</div>
+</div>
+<p>I defined <code class="docutils literal notranslate"><span class="pre">choice</span></code>, which returns a random element from the Hist.  On average, ‘l’ should appear twice as often as the other letters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">hist</span><span class="o">.</span><span class="n">choice</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>l
+e
+l
+l
+l
+e
+l
+n
+l
+l
+</pre></div>
+</div>
+</div>
+</div>
+<p>One (perhaps surprising) thing you can use Hists for: checking whether two words are anagrams of each  other.  If two words are anagrams, they have the same Hist:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_anagram</span><span class="p">(</span><span class="n">word1</span><span class="p">,</span> <span class="n">word2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Hist</span><span class="p">(</span><span class="n">word1</span><span class="p">)</span> <span class="o">==</span> <span class="n">Hist</span><span class="p">(</span><span class="n">word2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s a simple test:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">is_anagram</span><span class="p">(</span><span class="s1">'allen'</span><span class="p">,</span> <span class="s1">'nella'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>And my favorite anagram pair:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">is_anagram</span><span class="p">(</span><span class="s1">'tachymetric'</span><span class="p">,</span> <span class="s1">'mccarthyite'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>And here’s a false one, just to make sure:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">is_anagram</span><span class="p">(</span><span class="s1">'abcd'</span><span class="p">,</span> <span class="s1">'abccd'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<p>So far the elements in the Hists have been letters (actually strings), but in statistics it is more common to work with numerical elements.  Here’s a Hist that represents the possible outcomes of a six-sided die:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d6</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="n">d6</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hist({1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1})
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Hist</span></code> provides a plot function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="n">COLORS</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
+
+<span class="n">d6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7edb0868081bb3fa92c7a67a3a3eee986a703d70cdb0d48d871088eb3fd7e30f.png" src="_images/7edb0868081bb3fa92c7a67a3a3eee986a703d70cdb0d48d871088eb3fd7e30f.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">elements</span></code> returns an iterator</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;itertools.chain at 0x7de5f2830400&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Which is easier to see if you convert to a list:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1, 2, 3, 4, 5, 6]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The product of two iterators is an iterator that enumerates all pairs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+
+<span class="n">product</span><span class="p">(</span><span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">(),</span> <span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;itertools.product at 0x7de5f283a180&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the elements of the product:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">(),</span> <span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(1, 1),
+ (1, 2),
+ (1, 3),
+ (1, 4),
+ (1, 5),
+ (1, 6),
+ (2, 1),
+ (2, 2),
+ (2, 3),
+ (2, 4),
+ (2, 5),
+ (2, 6),
+ (3, 1),
+ (3, 2),
+ (3, 3),
+ (3, 4),
+ (3, 5),
+ (3, 6),
+ (4, 1),
+ (4, 2),
+ (4, 3),
+ (4, 4),
+ (4, 5),
+ (4, 6),
+ (5, 1),
+ (5, 2),
+ (5, 3),
+ (5, 4),
+ (5, 5),
+ (5, 6),
+ (6, 1),
+ (6, 2),
+ (6, 3),
+ (6, 4),
+ (6, 5),
+ (6, 6)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can compute the sum of all pairs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">(),</span> <span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2,
+ 3,
+ 4,
+ 5,
+ 6,
+ 7,
+ 3,
+ 4,
+ 5,
+ 6,
+ 7,
+ 8,
+ 4,
+ 5,
+ 6,
+ 7,
+ 8,
+ 9,
+ 5,
+ 6,
+ 7,
+ 8,
+ 9,
+ 10,
+ 6,
+ 7,
+ 8,
+ 9,
+ 10,
+ 11,
+ 7,
+ 8,
+ 9,
+ 10,
+ 11,
+ 12]
+</pre></div>
+</div>
+</div>
+</div>
+<p>And finally make a Hist of the sums:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Hist</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">(),</span> <span class="n">d6</span><span class="o">.</span><span class="n">elements</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hist({7: 6, 6: 5, 8: 5, 5: 4, 9: 4, 4: 3, 10: 3, 3: 2, 11: 2, 2: 1, 12: 1})
+</pre></div>
+</div>
+</div>
+</div>
+<p>But all of that is provided by <code class="docutils literal notranslate"><span class="pre">__add__</span></code>, which we can call using the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">twice</span> <span class="o">=</span> <span class="n">d6</span> <span class="o">+</span> <span class="n">d6</span>
+<span class="n">twice</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hist({7: 6, 6: 5, 8: 5, 5: 4, 9: 4, 4: 3, 10: 3, 3: 2, 11: 2, 2: 1, 12: 1})
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can plot the histogram of outcomes from rolling two dice:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">twice</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/bba70583047b36cec9a5d4a32e1a08b6777d446251510a481e4f64abc2adc35e.png" src="_images/bba70583047b36cec9a5d4a32e1a08b6777d446251510a481e4f64abc2adc35e.png" />
+</div>
+</div>
+<p>Or three dice:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thrice</span> <span class="o">=</span> <span class="n">twice</span> <span class="o">+</span> <span class="n">d6</span>
+<span class="n">thrice</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hist({10: 27,
+      11: 27,
+      9: 25,
+      12: 25,
+      8: 21,
+      13: 21,
+      7: 15,
+      14: 15,
+      6: 10,
+      15: 10,
+      5: 6,
+      16: 6,
+      4: 3,
+      17: 3,
+      3: 1,
+      18: 1})
+</pre></div>
+</div>
+</div>
+</div>
+<p>Notice that this is looking more and more like a bell curve:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thrice</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/401f542e73238389557d4c709031dd41fe6a3404d03ca853bfffa80b90e27e09.png" src="_images/401f542e73238389557d4c709031dd41fe6a3404d03ca853bfffa80b90e27e09.png" />
+</div>
+</div>
+<p>As the number of dice increases, the result converges to a normal distribution, also known as a Gaussian distribution.</p>
+</section>
+<section id="are-first-babies-more-likely-to-be-late">
+<h2>Are first babies more likely to be late?<a class="headerlink" href="#are-first-babies-more-likely-to-be-late" title="Link to this heading">#</a></h2>
+<p>This is one of the first topics I wrote about in my blog, and still the most popular, with more than 100,000 page views:</p>
+<p>http://allendowney.blogspot.com/2011/02/are-first-babies-more-likely-to-be-late.html</p>
+<p>I used data from the National Survey of Family Growth (NSFG):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_stata_dct</span><span class="p">(</span><span class="n">dct_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reads a Stata dictionary file.</span>
+
+<span class="sd">    dct_file: string filename</span>
+
+<span class="sd">    returns: list of (start, end) column specs, list of variable names</span>
+<span class="sd">    """</span>
+    <span class="n">starts</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dct_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">'_column\(([^)]*)\)'</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">starts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">colspecs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="n">starts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">colspecs</span><span class="p">,</span> <span class="n">names</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_fem_preg</span><span class="p">(</span><span class="n">dct_file</span><span class="o">=</span><span class="s1">'2002FemPreg.dct'</span><span class="p">,</span> <span class="n">dat_file</span><span class="o">=</span><span class="s1">'2002FemPreg.dat.gz'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reads the NSFG pregnancy data.</span>
+
+<span class="sd">    returns: DataFrame</span>
+<span class="sd">    """</span>
+    <span class="n">colspecs</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">read_stata_dct</span><span class="p">(</span><span class="n">dct_file</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_fwf</span><span class="p">(</span><span class="n">dat_file</span><span class="p">,</span> <span class="n">colspecs</span><span class="o">=</span><span class="n">colspecs</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">'gzip'</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># defragment the columns read_fwf creates</span>
+
+    <span class="c1"># replace 'not ascertained', 'refused', 'don't know' with NaN</span>
+    <span class="n">na_vals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">99</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">na_vals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_oz'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_oz'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">na_vals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="c1"># birthwgt_lb contains at least one bogus value (51 lbs)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># birth weight is stored in two columns, lbs and oz;</span>
+    <span class="c1"># convert to a single column in lb</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'totalwgt_lb'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_lb'</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">'birthwgt_oz'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">16</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">preg</span> <span class="o">=</span> <span class="n">read_fem_preg</span><span class="p">()</span>
+
+<span class="n">preg</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>caseid</th>
+      <th>pregordr</th>
+      <th>howpreg_n</th>
+      <th>howpreg_p</th>
+      <th>moscurrp</th>
+      <th>nowprgdk</th>
+      <th>pregend1</th>
+      <th>pregend2</th>
+      <th>nbrnaliv</th>
+      <th>multbrth</th>
+      <th>...</th>
+      <th>laborfor_i</th>
+      <th>religion_i</th>
+      <th>metro_i</th>
+      <th>basewgt</th>
+      <th>adj_mod_basewgt</th>
+      <th>finalwgt</th>
+      <th>secu_p</th>
+      <th>sest</th>
+      <th>cmintvw</th>
+      <th>totalwgt_lb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3410.389399</td>
+      <td>3869.349602</td>
+      <td>6448.271112</td>
+      <td>2</td>
+      <td>9</td>
+      <td>1231</td>
+      <td>8.8125</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3410.389399</td>
+      <td>3869.349602</td>
+      <td>6448.271112</td>
+      <td>2</td>
+      <td>9</td>
+      <td>1231</td>
+      <td>7.8750</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5.0</td>
+      <td>NaN</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7226.301740</td>
+      <td>8567.549110</td>
+      <td>12999.542264</td>
+      <td>2</td>
+      <td>12</td>
+      <td>1231</td>
+      <td>9.1250</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7226.301740</td>
+      <td>8567.549110</td>
+      <td>12999.542264</td>
+      <td>2</td>
+      <td>12</td>
+      <td>1231</td>
+      <td>7.0000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7226.301740</td>
+      <td>8567.549110</td>
+      <td>12999.542264</td>
+      <td>2</td>
+      <td>12</td>
+      <td>1231</td>
+      <td>6.1875</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 244 columns</p>
+</div></div></div>
+</div>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">outcome</span></code> encodes the outcome of the pregnancy.  Outcome 1 is a live birth.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">preg</span><span class="o">.</span><span class="n">outcome</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>outcome
+1    9148
+2    1862
+3     120
+4    1921
+5     190
+6     352
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pregordr</span></code> is 1 for first pregnancies, 2 for others.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">preg</span><span class="o">.</span><span class="n">pregordr</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pregordr
+1     5033
+2     3766
+3     2334
+4     1224
+5      613
+6      308
+7      158
+8       78
+9       38
+10      17
+11       8
+12       5
+13       3
+14       3
+15       1
+16       1
+17       1
+18       1
+19       1
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>I selected live births, then split into first babies and others.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">live</span> <span class="o">=</span> <span class="n">preg</span><span class="p">[</span><span class="n">preg</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">firsts</span> <span class="o">=</span> <span class="n">live</span><span class="p">[</span><span class="n">live</span><span class="o">.</span><span class="n">birthord</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">others</span> <span class="o">=</span> <span class="n">live</span><span class="p">[</span><span class="n">live</span><span class="o">.</span><span class="n">birthord</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">firsts</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">others</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4413, 4735)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The mean pregnancy lengths are slightly different:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(38.60095173351461), np.float64(38.52291446673706))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The difference is 0.078 weeks:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">=</span> <span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">diff</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.07803726677754952)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Which is 13 hours.  Note: the best units to report are often not the units you computed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">24</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(13.11026081862832)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see if we can visualize the difference in the histograms:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_hist</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="p">)</span>
+<span class="n">other_hist</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>I used some plotting options to put two bar charts side-by-side:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_distributions</span><span class="p">(</span><span class="n">dist1</span><span class="p">,</span> <span class="n">dist2</span><span class="p">):</span>
+    <span class="n">dist1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">width</span><span class="o">=-</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">'edge'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'firsts'</span><span class="p">)</span>
+    <span class="n">dist2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">'edge'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'others'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">33.5</span><span class="p">,</span> <span class="mf">43.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the two histograms:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_distributions</span><span class="p">(</span><span class="n">first_hist</span><span class="p">,</span> <span class="n">other_hist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/8647c4cf3e27f45adf36d70eed6755db0065838493ab1ce90a17a7a17cbd1d30.png" src="_images/8647c4cf3e27f45adf36d70eed6755db0065838493ab1ce90a17a7a17cbd1d30.png" />
+</div>
+</div>
+<p>Remember that the vertical axis is counts.  In this case, we are comparing counts with different totals, which might be misleading.</p>
+<p>An alternative is to compute a probability mass function (PMF), which divides the counts by the totals, yielding a map from each element to its probability.</p>
+<p>The probabilities are “normalized” to add up to 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Pmf</span><span class="p">(</span><span class="n">Hist</span><span class="p">):</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">/=</span> <span class="n">total</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_cumulative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ps</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">cs</span> <span class="o">/=</span> <span class="n">cs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can compare PMFs fairly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_pmf</span> <span class="o">=</span> <span class="n">Pmf</span><span class="p">(</span><span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+<span class="n">other_pmf</span> <span class="o">=</span> <span class="n">Pmf</span><span class="p">(</span><span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using PMFs, we see that some of the difference at 39 weeks was an artifact of the different sample sizes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_distributions</span><span class="p">(</span><span class="n">first_pmf</span><span class="p">,</span> <span class="n">other_pmf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/16c9732a5d2eb2328a2af414c9e9e093723cb6ea25553e40d591cbd9af5a38f9.png" src="_images/16c9732a5d2eb2328a2af414c9e9e093723cb6ea25553e40d591cbd9af5a38f9.png" />
+</div>
+</div>
+<p>Even so, it is not easy to compare PMFs.  One more alternative is the cumulative mass function (CMF), which shows, for each <span class="math notranslate nohighlight">\(t\)</span>, the total probability up to and including <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_pmf</span><span class="o">.</span><span class="n">plot_cumulative</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'firsts'</span><span class="p">)</span>
+<span class="n">other_pmf</span><span class="o">.</span><span class="n">plot_cumulative</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'others'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">23.5</span><span class="p">,</span> <span class="mf">44.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'upper left'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7de5e92ba7e0&gt;
+</pre></div>
+</div>
+<img alt="_images/7e59f678ec88d639b0475ca0549d012e9a95f642091ec467ade8bb6454a83a60.png" src="_images/7e59f678ec88d639b0475ca0549d012e9a95f642091ec467ade8bb6454a83a60.png" />
+</div>
+</div>
+<p>The CDFs are similar up to week 38.  After that, first babies are more likely to be born late.</p>
+<p>Note: don’t be afraid of thick lines.  Differences that are only visible with thin lines are unlikely to be real.</p>
+</section>
+<section id="word-frequencies">
+<h2>Word Frequencies<a class="headerlink" href="#word-frequencies" title="Link to this heading">#</a></h2>
+<p>Next topic: let’s look at histograms of words, bigrams and trigrams.</p>
+<p>The following function reads lines from a file or URL and splits them into words:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">iterate_words</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Read lines from a file and split them into words."""</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here’s an example using a book from Project Gutenberg.  <code class="docutils literal notranslate"><span class="pre">wc</span></code> is a histogram of word counts:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FAIRY TALES</span>
+<span class="c1"># By The Brothers Grimm</span>
+<span class="c1"># https://www.gutenberg.org/cache/epub/2591/pg2591.txt</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="n">iterate_words</span><span class="p">(</span><span class="s1">'pg2591.txt'</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the 20 most common words:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wc</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('the', 6507),
+ ('and', 5250),
+ ('to', 2707),
+ ('a', 1932),
+ ('he', 1817),
+ ('of', 1450),
+ ('was', 1337),
+ ('in', 1080),
+ ('she', 1049),
+ ('that', 1021),
+ ('his', 1014),
+ ('you', 941),
+ ('it', 881),
+ ('her', 880),
+ ('had', 827),
+ ('I', 755),
+ ('they', 751),
+ ('for', 721),
+ ('with', 720),
+ ('as', 718)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Word frequencies in natural languages follow a predictable pattern called Zipf’s law (which is an instance of Stigler’s law, which is also an instance of Stigler’s law).</p>
+<p>We can see the pattern by lining up the words in descending order of frequency and plotting their ranks (1st, 2nd, 3rd, …) versus counts (6507, 5250, 2707):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ranks</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">wc</span><span class="o">.</span><span class="n">ranks</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ranks</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'rank'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'count'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, 'count')
+</pre></div>
+</div>
+<img alt="_images/277a8244e297105dea07f624d8000eca0ea77083efb7c35badc4132dff83397d.png" src="_images/277a8244e297105dea07f624d8000eca0ea77083efb7c35badc4132dff83397d.png" />
+</div>
+</div>
+<p>Huh.  Maybe that’s not so clear after all.  The problem is that the counts drop off very quickly.  If we use the highest count to scale the figure, most of the other counts are indistinguishable from zero.</p>
+<p>Also, there are more than 10,000 words, but most of them appear only a few times, so we are wasting most of the space in the figure in a regime where nothing is happening.</p>
+<p>This kind of thing happens a lot.  A common way to deal with it is to compute the log of the quantities or to plot them on a log scale:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ranks</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">wc</span><span class="o">.</span><span class="n">ranks</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ranks</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'rank'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'count'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">'log'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">'log'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3a12898cfbf9189fc8afa92019524785c835db12e080b1102cf81e0877cf02eb.png" src="_images/3a12898cfbf9189fc8afa92019524785c835db12e080b1102cf81e0877cf02eb.png" />
+</div>
+</div>
+<p>This (approximately) straight line is characteristic of Zipf’s law.</p>
+</section>
+<section id="n-grams">
+<h2>n-grams<a class="headerlink" href="#n-grams" title="Link to this heading">#</a></h2>
+<p>On to the next topic: bigrams and trigrams.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">tee</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pairwise</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Iterates through a sequence in overlapping pairs.</span>
+<span class="sd">    </span>
+<span class="sd">    If the sequence is 1, 2, 3, the result is (1, 2), (2, 3), (3, 4), etc.</span>
+<span class="sd">    """</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">tee</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">bigrams</span></code> is the histogram of word pairs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bigrams</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="n">pairwise</span><span class="p">(</span><span class="n">iterate_words</span><span class="p">(</span><span class="s1">'pg2591.txt'</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And here are the 20 most common:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bigrams</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(('to', 'the'), 444),
+ (('in', 'the'), 399),
+ (('of', 'the'), 369),
+ (('and', 'the'), 349),
+ (('into', 'the'), 294),
+ (('said', 'the'), 251),
+ (('on', 'the'), 199),
+ (('and', 'when'), 168),
+ (('he', 'had'), 164),
+ (('he', 'was'), 164),
+ (('to', 'be'), 163),
+ (('it', 'was'), 152),
+ (('Then', 'the'), 151),
+ (('I', 'will'), 149),
+ (('that', 'he'), 143),
+ (('at', 'the'), 142),
+ (('came', 'to'), 138),
+ (('and', 'he'), 135),
+ (('she', 'was'), 129),
+ (('all', 'the'), 125)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Similarly, we can iterate the trigrams:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">triplewise</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">tee</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="nb">next</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And make a histogram:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trigrams</span> <span class="o">=</span> <span class="n">Hist</span><span class="p">(</span><span class="n">triplewise</span><span class="p">(</span><span class="n">iterate_words</span><span class="p">(</span><span class="s1">'pg2591.txt'</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the 20 most common:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trigrams</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(('came', 'to', 'the'), 65),
+ (('and', 'when', 'he'), 50),
+ (('out', 'of', 'the'), 50),
+ (('said', 'to', 'the'), 34),
+ (('he', 'came', 'to'), 33),
+ (('and', 'when', 'she'), 33),
+ (('went', 'into', 'the'), 32),
+ (('went', 'to', 'the'), 31),
+ (('and', 'said', 'to'), 31),
+ (('one', 'of', 'the'), 30),
+ (('came', 'to', 'a'), 30),
+ (('and', 'as', 'he'), 29),
+ (('they', 'came', 'to'), 29),
+ (('he', 'did', 'not'), 28),
+ (('there', 'was', 'a'), 28),
+ (('that', 'he', 'had'), 28),
+ (('and', 'I', 'will'), 27),
+ (('that', 'it', 'was'), 25),
+ (('and', 'at', 'last'), 24),
+ (('and', 'when', 'the'), 24)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>And now for a little fun.  I’ll make a dictionary that maps from each word pair to a Hist of the words that can follow.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">Hist</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">trigrams</span><span class="p">:</span>
+    <span class="n">d</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="n">trigrams</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can look up a pair and see what might come next:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">[</span><span class="s1">'the'</span><span class="p">,</span> <span class="s1">'blood'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hist({'ran': 2,
+      'of': 2,
+      'on': 1,
+      'that': 1,
+      'came,': 1,
+      'streamed': 1,
+      'fell': 1,
+      'might': 1,
+      'ran.': 1})
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the most common words that follow “into the”:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">[</span><span class="s1">'into'</span><span class="p">,</span> <span class="s1">'the'</span><span class="p">]</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('forest', 15),
+ ('forest,', 13),
+ ('garden', 9),
+ ('kitchen,', 8),
+ ('cellar', 8),
+ ('wide', 7),
+ ('room,', 7),
+ ('water,', 7),
+ ('wood', 6),
+ ('kitchen', 6)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here are the words that follow “said the”:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">[</span><span class="s1">'said'</span><span class="p">,</span> <span class="s1">'the'</span><span class="p">]</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('old', 13),
+ ('man,', 12),
+ ('little', 10),
+ ('fisherman,', 8),
+ ('father,', 7),
+ ('ass,', 6),
+ ('other;', 5),
+ ('wife,', 5),
+ ('fish;', 5),
+ ('fish.', 5)]
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Hist</span></code> provides <code class="docutils literal notranslate"><span class="pre">choice</span></code>, which chooses a random word with probability proportional to count:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">[</span><span class="s1">'said'</span><span class="p">,</span> <span class="s1">'the'</span><span class="p">]</span><span class="o">.</span><span class="n">choice</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'bird,'
+</pre></div>
+</div>
+</div>
+</div>
+<p>Given a prefix, we can choose a random suffix:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prefix</span> <span class="o">=</span> <span class="s1">'said'</span><span class="p">,</span> <span class="s1">'the'</span>
+<span class="n">suffix</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span><span class="o">.</span><span class="n">choice</span><span class="p">()</span>
+<span class="n">suffix</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'Sultan;'
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can shift the words and compute the next prefix:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">suffix</span>
+<span class="n">prefix</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>('the', 'Sultan;')
+</pre></div>
+</div>
+</div>
+</div>
+<p>Repeating this process, we can generate random new text that has the same correlation structure between words as the original:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span><span class="o">.</span><span class="n">choice</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">' '</span><span class="p">)</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">suffix</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'I will give you your own life.' When he had eaten and drunk, he showed them the mark, and they put out his needle and goose, will never be able to get my ball again, I would willingly have been all over with soot, but left one of the sea! Hearken to me! My wife saw your rampion from the spot if he comes out of which there was so hard and fast that with all his people thither, and want to go away.' 'Ah,' said Elsie, 'if we marry each other they were proud and ill-behaved, and scorned to 
+</pre></div>
+</div>
+</div>
+</div>
+<p>With a prefix of two words, we typically get text that flirts with sensibility.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="resampling.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Teaching statistical inference with resampling</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="text_analysis.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Text analysis with Python</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hist-objects">Hist objects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#are-first-babies-more-likely-to-be-late">Are first babies more likely to be late?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#word-frequencies">Word Frequencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-grams">n-grams</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Allen B. Downey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script>new Image().src="https://greenteapress.com/gh.gif?u="+encodeURIComponent(location.href)+"&r="+encodeURIComponent(document.referrer)</script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
