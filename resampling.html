@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -353,7 +353,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing">Hypothesis testing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistics">Different test statistics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-object-oriented-framework">An object-oriented framework</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistic">Different test statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-the-standard-deviation">Testing the standard deviation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-model">Different model</a></li>
 </ul>
             </nav>
@@ -368,8 +368,6 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="teaching-statistical-inference-with-resampling">
 <h1>Teaching statistical inference with resampling<a class="headerlink" href="#teaching-statistical-inference-with-resampling" title="Link to this heading">#</a></h1>
-<p>Copyright 2018–2026 Allen Downey</p>
-<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 <p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/resampling.ipynb">Click here to run this notebook on Colab</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -674,7 +672,7 @@ getting a result as extreme as that would be less than 7%’.</em></p>
 <p>Suppose we want to estimate the average height of men in the U.S.</p>
 <p>We can use data from the <a class="reference external" href="https://www.cdc.gov/brfss/index.html">BRFSS</a>:</p>
 <p>“The Behavioral Risk Factor Surveillance System (BRFSS) is the nation’s premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services.”</p>
-<p>The following function reads the most recent data from BRFSS (2016), selects just the columns we need, and saves the results in a compressed CSV file, <code class="docutils literal notranslate"><span class="pre">brfss2016_subset.csv.gz</span></code>, which is in the repository for this notebook.</p>
+<p>The following function reads data from the 2016 BRFSS, selects just the columns we need, and saves the results in a compressed CSV file, <code class="docutils literal notranslate"><span class="pre">brfss2016_subset.csv.gz</span></code>, which is in the repository for this notebook.</p>
 <p>The original data file is large, so it is much faster to read the CSV file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -859,8 +857,8 @@ Std male height in cm = 7.792878100892027
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.49 s, sys: 951 ms, total: 3.44 s
-Wall time: 3.44 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.43 s, sys: 919 ms, total: 3.35 s
+Wall time: 3.35 s
 </pre></div>
 </div>
 </div>
@@ -1042,7 +1040,7 @@ Std error =  0.009626855774270493
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 8s, sys: 4.2 s, total: 1min 13s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 9s, sys: 4.18 s, total: 1min 13s
 Wall time: 1min 13s
 </pre></div>
 </div>
@@ -1727,8 +1725,8 @@ p-value = 0.163
 </div>
 </div>
 </section>
-<section id="different-test-statistic">
-<h2>Different test statistic<a class="headerlink" href="#different-test-statistic" title="Link to this heading">#</a></h2>
+<section id="testing-the-standard-deviation">
+<h2>Testing the standard deviation<a class="headerlink" href="#testing-the-standard-deviation" title="Link to this heading">#</a></h2>
 <p>It’s easy to run a test with a different test statistic.  For example, if we think that first babies might be more variable than others, we could use the difference in standard deviation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1832,6 +1830,8 @@ p-value = 0.17
 <p>The results from this model are not substantially different, which suggests that they do not depend on arbitrary modeling decisions, and that’s good.</p>
 <p>For this example, the permutation test is probably better because it does not make any assumptions about the distribution of pregnancy lengths.</p>
 <p>If the sample size were substantially smaller, the model that draws from the normal distribution might be better.</p>
+<p>Copyright 2018–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 </section>
 </section>
 
@@ -1911,7 +1911,7 @@ p-value = 0.17
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing">Hypothesis testing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistics">Different test statistics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#an-object-oriented-framework">An object-oriented framework</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-test-statistic">Different test statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-the-standard-deviation">Testing the standard deviation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-model">Different model</a></li>
 </ul>
   </nav></div>

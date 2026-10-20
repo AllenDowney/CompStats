@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -361,8 +361,6 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="text-analysis-with-python">
 <h1>Text analysis with Python<a class="headerlink" href="#text-analysis-with-python" title="Link to this heading">#</a></h1>
-<p>Copyright 2019–2026 Allen Downey</p>
-<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 <p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/text_analysis.ipynb">Click here to run this notebook on Colab</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -396,19 +394,28 @@
 <section id="word-frequencies">
 <h2>Word Frequencies<a class="headerlink" href="#word-frequencies" title="Link to this heading">#</a></h2>
 <p>Let’s look at frequencies of words, bigrams and trigrams in a text.</p>
-<p>The following function reads lines from a file or URL and splits them into words:</p>
+<p>The following function reads lines from a file and splits them into words:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">iterate_words</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Read lines from a file and split them into words."""</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Read lines from a file and split them into words.</span>
+
+<span class="sd">    Skips the Project Gutenberg header and license.</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'*** START OF'</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'*** END OF'</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Here’s an example using a book.  <code class="docutils literal notranslate"><span class="pre">wc</span></code> is a Counter of words, that is, a dictionary that maps from each word to the number of times it appears:</p>
+<p>Here’s an example using <em>Pride and Prejudice</em>, by Jane Austen, from Project Gutenberg.  <code class="docutils literal notranslate"><span class="pre">wc</span></code> is a Counter of words, that is, a dictionary that maps from each word to the number of times it appears:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PRIDE AND PREJUDICE</span>
@@ -435,32 +442,32 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('the', 4230),
- ('to', 4117),
- ('of', 3689),
- ('and', 3350),
- ('a', 1930),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('the', 4061),
+ ('to', 4045),
+ ('of', 3578),
+ ('and', 3282),
+ ('a', 1874),
  ('her', 1831),
- ('in', 1821),
- ('was', 1797),
+ ('was', 1795),
+ ('in', 1763),
  ('I', 1696),
- ('that', 1432),
- ('not', 1368),
+ ('that', 1420),
+ ('not', 1342),
  ('she', 1303),
- ('be', 1203),
+ ('be', 1187),
  ('his', 1168),
- ('as', 1128),
  ('had', 1126),
- ('with', 1044),
- ('he', 1038),
- ('for', 1018),
- ('you', 980)]
+ ('as', 1119),
+ ('he', 1036),
+ ('with', 998),
+ ('for', 996),
+ ('it', 935)]
 </pre></div>
 </div>
 </div>
 </div>
 <p>Word frequencies in natural languages follow a predictable pattern called Zipf’s law (which is an instance of Stigler’s law, which is also an instance of Stigler’s law).</p>
-<p>We can see the pattern by lining up the words in descending order of frequency and plotting their counts (4230, 4117, 3689) versus ranks (1st, 2nd, 3rd, …):</p>
+<p>We can see the pattern by lining up the words in descending order of frequency and plotting their counts (4061, 4045, 3578) versus ranks (1st, 2nd, 3rd, …):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">counter_ranks</span><span class="p">(</span><span class="n">wc</span><span class="p">):</span>
@@ -481,7 +488,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/2edf61526c4b58590fb24e386c13b111e5de35c3c31f0b1929c73a81c478f900.png" src="_images/2edf61526c4b58590fb24e386c13b111e5de35c3c31f0b1929c73a81c478f900.png" />
+<img alt="_images/330dd7260c524abc2b600c899b15592a130e70bb460a8035bd9342099bb23608.png" src="_images/330dd7260c524abc2b600c899b15592a130e70bb460a8035bd9342099bb23608.png" />
 </div>
 </div>
 <p>Huh.  Maybe that’s not so clear after all.  The problem is that the counts drop off very quickly.  If we use the highest count to scale the figure, most of the other counts are indistinguishable from zero.</p>
@@ -500,7 +507,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/f7764875c5fd563b28e01808d4286326b3bc31a3938a800a74900de56fc19121.png" src="_images/f7764875c5fd563b28e01808d4286326b3bc31a3938a800a74900de56fc19121.png" />
+<img alt="_images/3520b74ada6add2f314cc4e7657595a5af1d3f61cd9f62c6685a8cf49d8ee3ff.png" src="_images/3520b74ada6add2f314cc4e7657595a5af1d3f61cd9f62c6685a8cf49d8ee3ff.png" />
 </div>
 </div>
 <p>This (approximately) straight line is characteristic of Zipf’s law.</p>
@@ -540,26 +547,26 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(('of', 'the'), 488),
- (('to', 'be'), 421),
- (('in', 'the'), 389),
- (('to', 'the'), 261),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(('of', 'the'), 457),
+ (('to', 'be'), 419),
+ (('in', 'the'), 371),
  (('of', 'her'), 246),
+ (('to', 'the'), 246),
  (('I', 'am'), 233),
  (('of', 'his'), 225),
  (('had', 'been'), 194),
  (('could', 'not'), 167),
  (('that', 'he'), 165),
  (('she', 'had'), 164),
- (('for', 'the'), 162),
- (('and', 'the'), 160),
+ (('for', 'the'), 157),
+ (('and', 'the'), 156),
  (('it', 'was'), 156),
  (('she', 'was'), 147),
  (('he', 'had'), 143),
- (('on', 'the'), 143),
  (('I', 'have'), 140),
+ (('on', 'the'), 140),
  (('to', 'her'), 139),
- (('such', 'a'), 137)]
+ (('Mr.', 'Darcy'), 137)]
 </pre></div>
 </div>
 </div>
@@ -609,10 +616,10 @@
  (('one', 'of', 'the'), 24),
  (('I', 'am', 'not'), 23),
  (('and', 'she', 'was'), 23),
- (('the', 'Project', 'Gutenberg'), 22),
  (('not', 'to', 'be'), 21),
  (('it', 'was', 'not'), 21),
- (('*', '*', '*'), 21)]
+ (('*', '*', '*'), 21),
+ (('Mrs.', 'Bennet', 'was'), 20)]
 </pre></div>
 </div>
 </div>
@@ -765,7 +772,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'house--but'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'ground.'
 </pre></div>
 </div>
 </div>
@@ -780,7 +787,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'breakfast'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'particulars'
 </pre></div>
 </div>
 </div>
@@ -794,7 +801,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>('the', 'breakfast')
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>('the', 'particulars')
 </pre></div>
 </div>
 </div>
@@ -810,12 +817,14 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>room, "and what do you really think so?" cried Elizabeth, "that I ever before mentioned to Miss Bingley could not be under any alarm. I will sit in my opinion, exertion should always be properly guarded and attended, according to Charlotte's first sketch. She was at Rosings?" "Nearly three weeks." She could think with wonder, of Mr. Collins, "I am glad of one individual, change the meaning of principle which he had been formed, as he was to come without it. "Yet it is lessening the honour of calling in Grosvenor-street." She wrote even to pass your life." "You make 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>of their marriage put an end to by any sigh of repentance; and rather looked with wonder at her being his patroness, she is really too great for her mother's. She could see how heartily did she endeavour to involve him in his gift. He was very large, and contained great variety of thought; re-considering events, determining probabilities, and reconciling herself as much as she had nothing to reproach him with. Thank God! I have often observed how little Miss De Bourgh--the former of whom we shall see the postilions, and try if any thing of his being in my 
 </pre></div>
 </div>
 </div>
 </div>
 <p>With a prefix of two words, we typically get text that flirts with sensibility.</p>
+<p>Copyright 2019–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 </section>
 </section>
 </section>

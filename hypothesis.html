@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -364,8 +364,6 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="hypothesis-testing">
 <h1>Hypothesis Testing<a class="headerlink" href="#hypothesis-testing" title="Link to this heading">#</a></h1>
-<p>Copyright 2016–2026 Allen Downey</p>
-<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 <p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/hypothesis_soln.ipynb">Click here to run this notebook on Colab</a>. For the exercises, use <a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/hypothesis.ipynb">the version with blanks</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -536,8 +534,8 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([39, 38, 38, ..., 41, 42, 39], shape=(4413,)),
- array([39, 37, 39, ..., 40, 43, 39], shape=(4735,)))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([30, 39, 36, ..., 39, 38, 39], shape=(4413,)),
+ array([39, 39, 36, ..., 39, 39, 39], shape=(4735,)))
 </pre></div>
 </div>
 </div>
@@ -550,7 +548,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.07344030823780656)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.005144060543024409)
 </pre></div>
 </div>
 </div>
@@ -581,7 +579,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d475e28113b5bdceefd2fd0517c5f20cec60868da0c77f88fbdb35e44f6b1bbc.png" src="_images/d475e28113b5bdceefd2fd0517c5f20cec60868da0c77f88fbdb35e44f6b1bbc.png" />
+<img alt="_images/e2ff2f21c923d003e5ee0bf1192cb245cebf446cc83f3b2584c432fde0096213.png" src="_images/e2ff2f21c923d003e5ee0bf1192cb245cebf446cc83f3b2584c432fde0096213.png" />
 </div>
 </div>
 <p>The p-value is the probability that the test statistic under the null hypothesis exceeds the actual value.</p>
@@ -593,7 +591,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.191)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.156)
 </pre></div>
 </div>
 </div>
@@ -717,9 +715,9 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>means permute pregnancy length
-p-value = 0.162
+p-value = 0.172
 actual = 0.07803726677754952
-ts max = 0.1826706206176425
+ts max = 0.1789492549970504
 </pre></div>
 </div>
 </div>
@@ -732,7 +730,7 @@ ts max = 0.1826706206176425
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/1cf0480dc2ccbc2d9348f1e95d1b528a6f383efe0ca05fb39e280c529e472502.png" src="_images/1cf0480dc2ccbc2d9348f1e95d1b528a6f383efe0ca05fb39e280c529e472502.png" />
+<img alt="_images/10ea064a8498b43b57d087d9af45afab2d5cae1904bc190d35a3cc4a1f6b5bec.png" src="_images/10ea064a8498b43b57d087d9af45afab2d5cae1904bc190d35a3cc4a1f6b5bec.png" />
 </div>
 </div>
 <section id="difference-in-standard-deviation">
@@ -772,9 +770,9 @@ ts max = 0.1826706206176425
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>std permute pregnancy length
-p-value = 0.149
+p-value = 0.161
 actual = 0.17604906422948297
-ts max = 0.4065601877213516
+ts max = 0.37668205793497345
 </pre></div>
 </div>
 </div>
@@ -799,7 +797,7 @@ ts max = 0.4065601877213516
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>means permute birthweight
 p-value = 0.0
 actual = 0.12476118453549034
-ts max = 0.10241261286878878
+ts max = 0.09659687503447234
 </pre></div>
 </div>
 </div>
@@ -829,7 +827,7 @@ ts max = 0.10241261286878878
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(100.33752540991462), np.float64(98.69042446127649))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(98.66579935814441), np.float64(102.50259488905196))
 </pre></div>
 </div>
 </div>
@@ -845,7 +843,7 @@ ts max = 0.10241261286878878
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.441)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.082)
 </pre></div>
 </div>
 </div>
@@ -897,7 +895,7 @@ ts max = 0.10241261286878878
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(2)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(5)
 </pre></div>
 </div>
 </div>
@@ -928,7 +926,7 @@ ts max = 0.10241261286878878
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d9dd06fdfe1f8d4dad6a8b449df859d56e85503327ee8b606f226babc195d764.png" src="_images/d9dd06fdfe1f8d4dad6a8b449df859d56e85503327ee8b606f226babc195d764.png" />
+<img alt="_images/431efff02b1ede29e9d921b093afa808ab51f5e6cfe46f5f2b7397915e83842d.png" src="_images/431efff02b1ede29e9d921b093afa808ab51f5e6cfe46f5f2b7397915e83842d.png" />
 </div>
 </div>
 <p>The distribution of p-values is uniform from 0 to 1.  So it falls below 5% about 5% of the time.</p>
@@ -971,7 +969,7 @@ ts max = 0.10241261286878878
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(68)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(59)
 </pre></div>
 </div>
 </div>
@@ -990,11 +988,13 @@ ts max = 0.10241261286878878
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/b035935a1d9178bdb8f903f48b7921ac9cdf2c31b011a62adc8048398cea235d.png" src="_images/b035935a1d9178bdb8f903f48b7921ac9cdf2c31b011a62adc8048398cea235d.png" />
+<img alt="_images/8faa3757d2098004d923aaa06d25040d76ebc4346d0dbdf8179e6f62debd4169.png" src="_images/8faa3757d2098004d923aaa06d25040d76ebc4346d0dbdf8179e6f62debd4169.png" />
 </div>
 </div>
 <p>Here’s the point of this example: if you get a negative result (no statistical significance), that is not always strong evidence that there is no difference between the groups.  It is also possible that the power of the test was too low; that is, that it was unlikely to produce a positive result, even if there is a difference between the groups.</p>
 <p><strong>Exercise:</strong> Assuming that the actual difference between the groups is 5, what sample size is needed to get the power of the test up to 80%?  What if the actual difference is 2, what sample size do we need to get to 80%?</p>
+<p>Copyright 2016–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 </section>
 </section>
 

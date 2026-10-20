@@ -42,7 +42,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -362,8 +362,6 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-pmfs">
 <h1>Introduction to PMFs<a class="headerlink" href="#introduction-to-pmfs" title="Link to this heading">#</a></h1>
-<p>Copyright 2015–2026 Allen Downey</p>
-<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 <p><a class="reference external" href="https://colab.research.google.com/github/AllenDowney/CompStats/blob/master/pmf_intro.ipynb">Click here to run this notebook on Colab</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -511,16 +509,16 @@ n 1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>l
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>n
 e
-l
-l
-l
-e
+n
 l
 n
 l
 l
+l
+n
+n
 </pre></div>
 </div>
 </div>
@@ -609,7 +607,7 @@ l
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;itertools.chain at 0x7de5f2830400&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;itertools.chain at 0x7988e6e25a50&gt;
 </pre></div>
 </div>
 </div>
@@ -637,7 +635,7 @@ l
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;itertools.product at 0x7de5f283a180&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;itertools.product at 0x7988e6dfae40&gt;
 </pre></div>
 </div>
 </div>
@@ -820,8 +818,8 @@ l
 </section>
 <section id="are-first-babies-more-likely-to-be-late">
 <h2>Are first babies more likely to be late?<a class="headerlink" href="#are-first-babies-more-likely-to-be-late" title="Link to this heading">#</a></h2>
-<p>This is one of the first topics I wrote about in my blog, and still the most popular, with more than 100,000 page views:</p>
-<p>http://allendowney.blogspot.com/2011/02/are-first-babies-more-likely-to-be-late.html</p>
+<p>This is one of the first topics I wrote about in my blog:</p>
+<p>https://allendowney.blogspot.com/2011/02/are-first-babies-more-likely-to-be-late.html</p>
 <p>I used data from the National Survey of Family Growth (NSFG):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1235,7 +1233,7 @@ Name: count, dtype: int64
 <img alt="_images/16c9732a5d2eb2328a2af414c9e9e093723cb6ea25553e40d591cbd9af5a38f9.png" src="_images/16c9732a5d2eb2328a2af414c9e9e093723cb6ea25553e40d591cbd9af5a38f9.png" />
 </div>
 </div>
-<p>Even so, it is not easy to compare PMFs.  One more alternative is the cumulative mass function (CMF), which shows, for each <span class="math notranslate nohighlight">\(t\)</span>, the total probability up to and including <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>Even so, it is not easy to compare PMFs.  One more alternative is the cumulative distribution function (CDF), which shows, for each <span class="math notranslate nohighlight">\(t\)</span>, the total probability up to and including <span class="math notranslate nohighlight">\(t\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_pmf</span><span class="o">.</span><span class="n">plot_cumulative</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'firsts'</span><span class="p">)</span>
@@ -1246,7 +1244,7 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7de5e92ba7e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7988e6c897f0&gt;
 </pre></div>
 </div>
 <img alt="_images/7e59f678ec88d639b0475ca0549d012e9a95f642091ec467ade8bb6454a83a60.png" src="_images/7e59f678ec88d639b0475ca0549d012e9a95f642091ec467ade8bb6454a83a60.png" />
@@ -1258,14 +1256,23 @@ Name: count, dtype: int64
 <section id="word-frequencies">
 <h2>Word Frequencies<a class="headerlink" href="#word-frequencies" title="Link to this heading">#</a></h2>
 <p>Next topic: let’s look at histograms of words, bigrams and trigrams.</p>
-<p>The following function reads lines from a file or URL and splits them into words:</p>
+<p>The following function reads lines from a file and splits them into words:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">iterate_words</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Read lines from a file and split them into words."""</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Read lines from a file and split them into words.</span>
+
+<span class="sd">    Skips the Project Gutenberg header and license.</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'*** START OF'</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'*** END OF'</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1289,32 +1296,32 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('the', 6507),
- ('and', 5250),
- ('to', 2707),
- ('a', 1932),
- ('he', 1817),
- ('of', 1450),
- ('was', 1337),
- ('in', 1080),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[('the', 6350),
+ ('and', 5182),
+ ('to', 2637),
+ ('a', 1876),
+ ('he', 1815),
+ ('of', 1344),
+ ('was', 1336),
  ('she', 1049),
- ('that', 1021),
+ ('in', 1026),
  ('his', 1014),
- ('you', 941),
- ('it', 881),
+ ('that', 1008),
+ ('you', 891),
  ('her', 880),
+ ('it', 871),
  ('had', 827),
  ('I', 755),
- ('they', 751),
- ('for', 721),
- ('with', 720),
- ('as', 718)]
+ ('they', 749),
+ ('as', 709),
+ ('for', 700),
+ ('with', 674)]
 </pre></div>
 </div>
 </div>
 </div>
 <p>Word frequencies in natural languages follow a predictable pattern called Zipf’s law (which is an instance of Stigler’s law, which is also an instance of Stigler’s law).</p>
-<p>We can see the pattern by lining up the words in descending order of frequency and plotting their ranks (1st, 2nd, 3rd, …) versus counts (6507, 5250, 2707):</p>
+<p>We can see the pattern by lining up the words in descending order of frequency and plotting their ranks (1st, 2nd, 3rd, …) versus counts (6350, 5182, 2637):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ranks</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">wc</span><span class="o">.</span><span class="n">ranks</span><span class="p">()</span>
@@ -1328,7 +1335,7 @@ Name: count, dtype: int64
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, 'count')
 </pre></div>
 </div>
-<img alt="_images/277a8244e297105dea07f624d8000eca0ea77083efb7c35badc4132dff83397d.png" src="_images/277a8244e297105dea07f624d8000eca0ea77083efb7c35badc4132dff83397d.png" />
+<img alt="_images/c66983c06f4553c4185aa36e41bba8164ec0dd3417e361fc476f987e6be7594c.png" src="_images/c66983c06f4553c4185aa36e41bba8164ec0dd3417e361fc476f987e6be7594c.png" />
 </div>
 </div>
 <p>Huh.  Maybe that’s not so clear after all.  The problem is that the counts drop off very quickly.  If we use the highest count to scale the figure, most of the other counts are indistinguishable from zero.</p>
@@ -1346,7 +1353,7 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/3a12898cfbf9189fc8afa92019524785c835db12e080b1102cf81e0877cf02eb.png" src="_images/3a12898cfbf9189fc8afa92019524785c835db12e080b1102cf81e0877cf02eb.png" />
+<img alt="_images/1c6a3cdbd857edf8073872e74cc0609f8733009e6b3efcef529d2a32f5520d38.png" src="_images/1c6a3cdbd857edf8073872e74cc0609f8733009e6b3efcef529d2a32f5520d38.png" />
 </div>
 </div>
 <p>This (approximately) straight line is characteristic of Zipf’s law.</p>
@@ -1386,26 +1393,26 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(('to', 'the'), 444),
- (('in', 'the'), 399),
- (('of', 'the'), 369),
- (('and', 'the'), 349),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(('to', 'the'), 429),
+ (('in', 'the'), 385),
+ (('and', 'the'), 346),
+ (('of', 'the'), 344),
  (('into', 'the'), 294),
  (('said', 'the'), 251),
- (('on', 'the'), 199),
+ (('on', 'the'), 196),
  (('and', 'when'), 168),
  (('he', 'had'), 164),
  (('he', 'was'), 164),
- (('to', 'be'), 163),
+ (('to', 'be'), 161),
  (('it', 'was'), 152),
  (('Then', 'the'), 151),
  (('I', 'will'), 149),
  (('that', 'he'), 143),
- (('at', 'the'), 142),
+ (('at', 'the'), 139),
  (('came', 'to'), 138),
  (('and', 'he'), 135),
  (('she', 'was'), 129),
- (('all', 'the'), 125)]
+ (('did', 'not'), 124)]
 </pre></div>
 </div>
 </div>
@@ -1548,7 +1555,7 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'bird,'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'king,'
 </pre></div>
 </div>
 </div>
@@ -1563,7 +1570,7 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'Sultan;'
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'straw.'
 </pre></div>
 </div>
 </div>
@@ -1577,7 +1584,7 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>('the', 'Sultan;')
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>('the', 'straw.')
 </pre></div>
 </div>
 </div>
@@ -1593,12 +1600,14 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'I will give you your own life.' When he had eaten and drunk, he showed them the mark, and they put out his needle and goose, will never be able to get my ball again, I would willingly have been all over with soot, but left one of the sea! Hearken to me! My wife saw your rampion from the spot if he comes out of which there was so hard and fast that with all his people thither, and want to go away.' 'Ah,' said Elsie, 'if we marry each other they were proud and ill-behaved, and scorned to 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'The old woman eat, she could soften its mischief; so she went to the king ordered fine royal robes to be plucked; and the cock who was at that moment pulling the kitchen-boy by the rope, tied her to dance, he said, 'Yes,' and that you were going to work at once! Fetch the broom and swept the bear's cave, and called all seven to her mother's grave and wept, and nothing was there with all their money without thinking of all one daughter. Although the little tailor. 'Do you think it is so the mice drew the turnip to 
 </pre></div>
 </div>
 </div>
 </div>
 <p>With a prefix of two words, we typically get text that flirts with sensibility.</p>
+<p>Copyright 2015–2026 Allen Downey</p>
+<p><a class="reference external" href="https://opensource.org/license/MIT">MIT License</a></p>
 </section>
 </section>
 
