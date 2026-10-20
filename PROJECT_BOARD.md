@@ -8,7 +8,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 
 ## Task 1: Refresh
 
-**Status:** In progress (2026-10-19)
+**Status:** DONE (2026-10-20), except Allen's Search Console submission
 
 **Context:** CompStats is a "current" workshop (GreenTeaPress Task 24). The guide is the "Refresh checklist" in `~/GreenTeaPress/plans/workshops.md`; BayesMadeSimple is the worked example. 223 stars; last content change 2021-03-08. The most recent recording is [SciPy 2017](https://www.youtube.com/watch?v=He9MCbs1wgE).
 
@@ -41,7 +41,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 **3. Colab**
 - [x] "Click here to run this notebook on Colab" cell after each title, all 10 notebooks; solutions also link to the version with blanks (2026-10-19)
 - [x] Colab links in the README's notebook table (step 5)
-- [ ] Allen runs one notebook on Colab end to end
+- [x] Allen ran `resampling` on Colab end to end (2026-10-20): it runs (downloads the BRFSS subset and the NSFG files)
 
 **4. Text**
 - [x] Typos, wrong docstrings, broken links (codespell, and read all the markdown; 2026-10-19), in both versions where there are two:
@@ -68,7 +68,7 @@ Numbered tasks for tracking work. Each task has a permanent number; add new task
 - [x] Hub entry still accurate (no change). Topic `jupyter-book` added on GitHub and to the CompStats line in GreenTeaPress `scripts/repo_about.sh` (left uncommitted there, next to other sessions' edits); description and website unchanged. Live site checked 2026-10-19: landing page, pages and sitemap return 200; the first Pages build after the switch had to be requested (`gh api -X POST repos/AllenDowney/CompStats/pages/builds`)
 
 **7. Close**
-- [ ] Tag `2026-refresh`; note in GreenTeaPress Task 24
+- [x] Site republished with the 2026-10-20 content fixes; tag `2026-refresh` pushed; note in GreenTeaPress Task 24 (2026-10-20)
 
 ### Inventory (2026-10-19)
 
